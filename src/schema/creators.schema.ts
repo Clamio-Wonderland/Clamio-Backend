@@ -88,3 +88,5 @@ export class Product {
   @attribute()
   is_active: boolean;
 }
+
+// creator schema;
