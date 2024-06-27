@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -29,6 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         picture: photos[0].value,
         accessToken,
       };
+
       done(null, user);
     } catch (error) {
       console.log(error);

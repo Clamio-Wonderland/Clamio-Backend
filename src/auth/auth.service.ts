@@ -1,55 +1,27 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(private JwtService: JwtService) {}
-  generateJwt(payload) {
-    return this.JwtService.sign(payload);
+
+  generateAndSendToken(email: any, profileId) {
+    const jwtToken = this.generateJwt({ email, id: profileId });
+    return jwtToken;
   }
 
-  async signIn(user) {
-    if (!user) {
-      throw new BadRequestException('Unauthenticated');
-    }
+  generateJwt(user) {
+    const payload = { id: user.googleId, email: user.email };
+    const jwtSecret = process.env.JWT_SECRET || 'jwtSecret';
+    return this.JwtService.sign(payload, { secret: jwtSecret });
+  }
 
-    const userExists = await this.findUserByEmail(user.email);
-
-    if (!userExists) {
-      return this.registerUser(user);
-    }
-
-    return this.generateJwt({
-      sub: userExists.id,
-      email: userExists.email,
+  clearCookie(res: Response): void {
+    //@ts-ignore
+    res.clearCookie(this.cookieName, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
     });
-  }
-
-  async registerUser(user: any) {
-    try {
-      //register user into the databse
-      const newUser = 'db logic';
-      //   return this.generateJwt({
-      //     sub: newUser.id,
-      //     email: newUser.email,
-      //   });
-    } catch {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async findUserByEmail(email) {
-    // const user = await this.user.findOne({ email });
-
-    const user = '';
-    if (!user) {
-      return null;
-    }
-
-    return user;
   }
 }
