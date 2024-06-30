@@ -3,7 +3,7 @@ import { CreateCommunityDto } from 'src/dto/create-community.dto';
 import { CreateCommunityService } from 'src/community/create-community/create-community.service';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 
-@Controller('create-product')
+@Controller('create-community')
 export class CreateCommunityController {
   constructor(private readonly createCommunityService: CreateCommunityService) {}
 
