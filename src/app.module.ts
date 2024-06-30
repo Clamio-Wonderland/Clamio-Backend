@@ -27,6 +27,7 @@ import { WishListModule } from './wish-list/wish-list.module';
     UserModule, 
     CommunityModule, 
     ProductModule, WishListModule, // Import other modules
+    UserModule, WishListModule, // Import UserModule
   ],
   controllers: [],
   providers: [GoogleStrategy],
