@@ -47,7 +47,7 @@ export class Achievement {
   threshold: number;
 }
 
-enum ProductCategory {
+export enum ProductCategory {
   TRAVEL_GUIDE = 'travel_guide',
   ESPORTS_GUIDE = 'esports_guide',
   FOOD_RECIPE = 'food_recipe',

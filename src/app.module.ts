@@ -4,6 +4,10 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { ProductModule } from './product/product.module';
+import { CommunityModule } from './community/community.module';
+import { GoogleStrategy } from './strategies/google.strategy';
+
 
 @Module({
   imports: [
@@ -20,9 +24,9 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true, // makes ConfigModule available globally
     }),
     AuthModule, // Import AuthModule
-    UserModule, // Import UserModule
+    UserModule, CommunityModule, ProductModule, // Import UserModule
   ],
   controllers: [],
-  providers: [],
+  providers: [GoogleStrategy],
 })
 export class AppModule {}
