@@ -4,6 +4,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { ProductModule } from './product/product.module';
+import { CommunityModule } from './community/community.module';
 
 @Module({
   imports: [
@@ -20,7 +22,10 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true, // makes ConfigModule available globally
     }),
     AuthModule, // Import AuthModule
-    UserModule, // Import UserModule
+    UserModule,
+    ProductModule,
+
+    CommunityModule, // Import UserModule
   ],
   controllers: [],
   providers: [],
