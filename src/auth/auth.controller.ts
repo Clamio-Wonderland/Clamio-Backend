@@ -9,7 +9,7 @@ export class AuthController {
 
   @Get()
   loginWithGoogle() {
-    return "<a href='/google'>Login with google</a>";
+    return "<a href='auth/google'>Login with google</a>";
   }
 
   @Get('google')
