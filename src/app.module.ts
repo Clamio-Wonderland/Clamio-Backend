@@ -8,11 +8,16 @@ import { ProductModule } from './product/product.module';
 import { CommunityModule } from './community/community.module';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { WishListModule } from './wish-list/wish-list.module';
+import { DynamooseModule } from 'nestjs-dynamoose';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Makes ConfigModule available globally
+    }),
+    DynamooseModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: '.env'
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
