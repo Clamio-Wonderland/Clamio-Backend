@@ -5,9 +5,14 @@ import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { WishListModule } from './wish-list/wish-list.module';
+import { DynamooseModule } from 'nestjs-dynamoose';
 
 @Module({
   imports: [
+    DynamooseModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: '.env'
+    }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

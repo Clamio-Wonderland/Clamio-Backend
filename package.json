@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.606.0",
     "@aws/dynamodb-data-mapper": "^0.7.3",
     "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@aws/dynamodb-data-marshaller": "^0.7.3",
@@ -29,10 +30,11 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
-    "aws-sdk": "^2.1649.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
+    "dynamoose": "^4.0.1",
     "express-session": "^1.18.0",
+    "nestjs-dynamoose": "^0.5.8",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "reflect-metadata": "^0.2.0",
