@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
-import { CreateCommunityDto } from 'src/dto/create-community.dto';
-import { CreateCommunityService } from 'src/community/create-community/create-community.service';
+import { CreateCommunityDto } from 'src/community/dto/create-community.dto';
+import { CreateCommunityService } from 'src/community/create-community.service';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 
 @Controller('create-community')
