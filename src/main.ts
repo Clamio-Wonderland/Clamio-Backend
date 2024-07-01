@@ -4,6 +4,8 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
+import { ValidationPipe } from '@nestjs/common';
+
 
 dotenv.config();
 
@@ -21,6 +23,8 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
 bootstrap();
+

@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CommunityModule } from './community/community.module';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { WishListModule } from './wish-list/wish-list.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
     AuthModule, // Import AuthModule
     UserModule, 
     CommunityModule, 
-    ProductModule, // Import other modules
+    ProductModule, WishListModule, // Import other modules
   ],
   controllers: [],
   providers: [GoogleStrategy],
