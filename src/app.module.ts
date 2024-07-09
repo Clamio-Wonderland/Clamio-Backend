@@ -17,7 +17,7 @@ import { DynamooseModule } from 'nestjs-dynamoose';
     }),
     DynamooseModule.forRoot(),
     ConfigModule.forRoot({
-      envFilePath: '.env'
+      envFilePath: '.env',
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -29,10 +29,12 @@ import { DynamooseModule } from 'nestjs-dynamoose';
     }),
     PassportModule.register({ defaultStrategy: 'google' }), // Register Google strategy as default
     AuthModule, // Import AuthModule
-    UserModule, 
-    CommunityModule, 
-    ProductModule, WishListModule, // Import other modules
-    UserModule, WishListModule, // Import UserModule
+    UserModule,
+    CommunityModule,
+    ProductModule,
+    WishListModule, // Import other modules
+    UserModule,
+    WishListModule, // Import UserModule
   ],
   controllers: [],
   providers: [GoogleStrategy],

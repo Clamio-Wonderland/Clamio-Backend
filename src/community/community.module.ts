@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CreateCommunityController } from './create-community.controller';
-import { CreateCommunityService } from './create-community.service';
+import { CommunityService } from './community.service';
+import { CommunityController } from './community.controller';
+import { DynamooseModule } from 'nestjs-dynamoose';
 
 @Module({
-  controllers: [CreateCommunityController],
-  providers:[CreateCommunityService]
+  providers: [CommunityService],
+  imports: [DynamooseModule],
+  controllers: [CommunityController],
 })
-export class CommunityModule {
-
-}
+export class CommunityModule {}
