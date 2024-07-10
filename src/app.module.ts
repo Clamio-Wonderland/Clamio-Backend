@@ -9,6 +9,7 @@ import { CommunityModule } from './community/community.module';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { WishListModule } from './wish-list/wish-list.module';
 import { DynamooseModule } from 'nestjs-dynamoose';
+import { CreatorModule } from './creator/creator.module';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { DynamooseModule } from 'nestjs-dynamoose';
     UserModule, 
     CommunityModule, 
     ProductModule, WishListModule, // Import other modules
-    UserModule, WishListModule, // Import UserModule
+    UserModule, WishListModule, CreatorModule, // Import UserModule
   ],
   controllers: [],
   providers: [GoogleStrategy],
