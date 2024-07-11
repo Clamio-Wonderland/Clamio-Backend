@@ -1,25 +1,36 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
+// Authentication modules
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
+import { GoogleStrategy } from './strategies/google.strategy';
+
+// Database connection
+import { DynamooseModule } from 'nestjs-dynamoose';
+
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CommunityModule } from './community/community.module';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { WishListModule } from './wish-list/wish-list.module';
-import { DynamooseModule } from 'nestjs-dynamoose';
 import { CreatorModule } from './creator/creator.module';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Makes ConfigModule available globally
     }),
+
+    // Database configuration module
     DynamooseModule.forRoot(),
+
+    // Environment configuration
     ConfigModule.forRoot({
       envFilePath: '.env'
     }),
+
+    // Authentication modules 
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -28,12 +39,18 @@ import { CreatorModule } from './creator/creator.module';
       }),
       inject: [ConfigService], // Inject ConfigService to use in useFactory
     }),
+
     PassportModule.register({ defaultStrategy: 'google' }), // Register Google strategy as default
-    AuthModule, // Import AuthModule
+
+    AuthModule, 
+
+    // basic modules
     UserModule, 
     CommunityModule, 
-    ProductModule, WishListModule, // Import other modules
-    UserModule, WishListModule, CreatorModule, // Import UserModule
+    ProductModule,
+    UserModule, 
+    CreatorModule, 
+    WishlistModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],

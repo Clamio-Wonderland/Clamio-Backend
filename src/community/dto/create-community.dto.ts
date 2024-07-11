@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsUrl } from "class-validator";
 
 export class CreateCommunityDto {
-
     @IsNotEmpty()
     @IsNumber()
     id: number  //primary key to uniquely identify the community

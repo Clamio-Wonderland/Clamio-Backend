@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString } from "class-validator";
 
-export class WishListDto {
-
+export class CreateWishlistDto {
     @IsNotEmpty()
     @IsString()
     user_id: number  //to identify the user 
@@ -9,6 +8,4 @@ export class WishListDto {
     @IsString()
     @IsNotEmpty()
     product_id: number; // to identify the product
-
-   
 }
