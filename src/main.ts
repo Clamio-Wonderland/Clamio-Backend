@@ -5,13 +5,14 @@ import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1/');
 
   app.use(
     session({
@@ -25,6 +26,15 @@ async function bootstrap() {
   app.use(passport.session());
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
+
+  const config = new DocumentBuilder()
+    .setTitle('Clamio Backend Api')
+    .setDescription('clamio backend api connected to dynamoDB')
+    .setVersion('1.0.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(3000);
 }
 bootstrap();
