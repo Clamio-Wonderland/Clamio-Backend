@@ -15,6 +15,7 @@ import { ProductModule } from './product/product.module';
 import { CommunityModule } from './community/community.module';
 import { CreatorModule } from './creator/creator.module';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -50,7 +51,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     ProductModule,
     UserModule, 
     CreatorModule, 
-    WishlistModule,
+    WishlistModule, UploadModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],
