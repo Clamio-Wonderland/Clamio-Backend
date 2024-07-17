@@ -8,6 +8,7 @@ import { extname } from 'path';
 export class UploadService {
     private readonly s3Client: S3Client
 
+    // constructor
     constructor(
         private readonly uuidService: UuidService,
         private readonly configService: ConfigService
@@ -22,13 +23,9 @@ export class UploadService {
     }
 
 
-    async uploadProductImages(files: Express.Multer.File[]): Promise<string[]> {
-        const uploadPromises: Promise<string>[] = files.map(file => {
-            return this.uploadImage(file);
-        });
-        return Promise.all(uploadPromises);
-    }
+    // UPLOAD PRODUCT IMAGE
 
+    // -- private method for uploading each image --
         private async uploadImage(file: Express.Multer.File): Promise<string> {
             const fileName = `${this.uuidService.generate()}.${extname(file.originalname)}`
             try {
@@ -43,22 +40,29 @@ export class UploadService {
                 throw error;
             }
         }
-    
-    // Creator Profile Uploader
-    async uploadCreatorProfile(fileName: string, file: Buffer){
-        const filename = `${this.uuidService.generate()}.${extname(fileName)}`
-        try {
-            const imageDetails = await this.s3Client.send(
-                new PutObjectCommand({
-                    Bucket: 'clamio-image',
-                    Key: filename,
-                    Body: file, 
-                })
-            );
-            return `https://clamio-image.s3.${this.configService.getOrThrow('AWS_S3_REGION')}.amazonaws.com/${filename}`
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            throw error; 
+    // -- MAIN method --
+        async uploadProductImages(files: Express.Multer.File[]): Promise<string[]> {
+            const uploadPromises: Promise<string>[] = files.map(file => {
+                return this.uploadImage(file);
+            });
+            return Promise.all(uploadPromises);
         }
-    }
+    
+    // CREATOR PROFILE UPLOADER
+        async uploadCreatorProfile(fileName: string, file: Buffer){
+            const filename = `${this.uuidService.generate()}.${extname(fileName)}`
+            try {
+                const imageDetails = await this.s3Client.send(
+                    new PutObjectCommand({
+                        Bucket: 'clamio-image',
+                        Key: filename,
+                        Body: file, 
+                    })
+                );
+                return `https://clamio-image.s3.${this.configService.getOrThrow('AWS_S3_REGION')}.amazonaws.com/${filename}`
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                throw error; 
+            }
+        }
 }
