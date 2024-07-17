@@ -5,9 +5,15 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { Product } from 'src/schema/product-schema';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class ProductService {
+
+  constructor(
+    private uploadService: UploadService
+  ){}
+
   private readonly dataMapper: DataMapper = dataMapper;
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
