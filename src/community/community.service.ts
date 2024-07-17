@@ -5,9 +5,15 @@ import { UpdateCommunityDto } from './dto/update-community.dto';
 import { Community } from 'src/schema/community-schema';
 import { dataMapper } from '../config/data-mapper.config'; // Adjust the import path according to your project structure
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { UploadModule } from 'src/upload/upload.module';
 
 @Injectable()
 export class CommunityService {
+
+  constructor(
+    private uploadModule : UploadModule
+  ){}
+  
   private readonly dataMapper: DataMapper = dataMapper;
 
   async create(createCommunityDto: CreateCommunityDto): Promise<Community> {
