@@ -5,13 +5,13 @@ import { UpdateCommunityDto } from './dto/update-community.dto';
 import { Community } from 'src/schema/community-schema';
 import { dataMapper } from '../config/data-mapper.config'; // Adjust the import path according to your project structure
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { UploadModule } from 'src/upload/upload.module';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class CommunityService {
 
   constructor(
-    private uploadModule : UploadModule
+    private uploadService: UploadService
   ){}
   
   private readonly dataMapper: DataMapper = dataMapper;
