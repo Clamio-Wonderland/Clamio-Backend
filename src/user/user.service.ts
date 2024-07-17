@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UploadService } from 'src/upload/upload.service';
+// import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class UserService {
 
   constructor(
-    private uploadService:UploadService
+    // private uploadService: UploadService
   ){}
 
   // create(createUserDto: CreateUserDto) {
