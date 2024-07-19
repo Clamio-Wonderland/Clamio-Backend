@@ -52,9 +52,9 @@ export class ProductService {
     }
   }
 
-  // findAll() {
-  //   return `This action returns all product`;
-  // }
+  findAll() {
+    return `This action returns all product`;
+  }
 
   async findOne(id: String): Promise <Product | undefined> {
     try {
