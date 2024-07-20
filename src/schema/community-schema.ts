@@ -1,12 +1,12 @@
-import { attribute, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
-@table('Community')
+@table('community')
 export class Community {
-  @attribute()
-  id: number;
+  @hashKey()
+  _id: string;
 
   @attribute()
-  creator_id: number;
+  creator_id: string;
 
   @attribute()
   name: string;

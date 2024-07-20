@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
 import { Community } from 'src/schema/community-schema';
-import { dataMapper } from '../config/data-mapper.config'; // Adjust the import path according to your project structure
+import { dataMapper } from '../config/data-mapper.config'; 
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 // import { UploadService } from 'src/upload/upload.service';
 
@@ -21,16 +21,17 @@ export class CommunityService {
     const slug = `${name}-${uuidv4()}`;
 
     const community = Object.assign(new Community(), {
-      id: Date.now().toString(), // Example way to generate ID, consider using a better unique ID strategy
-      creator_id,
-      name,
-      description,
-      thumbnail_url,
-      slug,
+      _id: uuidv4(),
+      creator_id:creator_id,
+      name:name,
+      description:description,
+      thumbnail_url:thumbnail_url,
+      slug:slug
     });
 
     try {
       const savedCommunity = await this.dataMapper.put(community);
+      console.log(savedCommunity);
       return savedCommunity;
     } catch (error) {
       console.error('Error creating community:', error);
@@ -39,19 +40,83 @@ export class CommunityService {
     
   }
 
-  findAll() {
-    return `This action returns all community`;
+
+
+  
+  async findAll() {
+    const communities: Community[] = [];
+    const iterator = this.dataMapper.scan({
+      valueConstructor: Community,
+      limit: 20
+    });
+  
+    for await (const community of iterator) {
+      communities.push(community);
+    }
+  
+    return communities;
+  }
+  
+
+
+
+  async findOne(id: string): Promise<Community | null> {
+    try {
+      const community = await this.dataMapper.get(Object.assign(new Community(), { _id : id }));
+      return community;
+    } catch (error) {
+      if (error.name === 'ItemNotFoundException') {
+        return null;
+      }
+      throw error;
+    }
+  }
+  
+
+
+
+  async update(id: string, updateCommunityDto: UpdateCommunityDto): Promise<Community | null> {
+    const { name, creator_id, description, thumbnail_url } = updateCommunityDto;
+  
+    try {
+      // retriving existing community
+      const existingCommunity = await this.dataMapper.get(Object.assign(new Community(), { _id: id }));
+      
+      // Update only the fields that are provided in the update DTO
+      const updatedCommunity = Object.assign(existingCommunity, {
+        creator_id: creator_id !== undefined ? creator_id : existingCommunity.creator_id,
+        name: name !== undefined ? name : existingCommunity.name,
+        description: description !== undefined ? description : existingCommunity.description,
+        thumbnail_url: thumbnail_url !== undefined ? thumbnail_url : existingCommunity.thumbnail_url
+      });
+  
+      // Save the updated community
+      const savedCommunity = await this.dataMapper.update(updatedCommunity);
+      console.log('Community updated:', savedCommunity);
+      return savedCommunity;
+    } 
+    catch (error) {
+      if (error.name === 'ItemNotFoundException') {
+        console.error('Community not found with ID:', id);
+        return null;
+      }
+      console.error('Error updating community:', error);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} community`;
-  }
 
-  update(id: number, updateCommunityDto: UpdateCommunityDto) {
-    return `This action updates a #${id} community`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} community`;
+
+  async remove(id: string) {
+    try {
+      const to_delete = Object.assign(new Community(),{_id : id});
+      const result = await this.dataMapper.delete(to_delete);
+    }
+    catch (error) {
+      throw error;
+      
+    }
+    
   }
 }

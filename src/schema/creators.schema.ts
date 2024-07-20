@@ -6,10 +6,10 @@ import { attribute, table } from '@aws/dynamodb-data-mapper-annotations';
 @table('Creator')
 export class Creator {
   @attribute()
-  id: number;
+  _id: string;
 
   @attribute()
-  user_id: number;
+  user_id: string;
 
   @attribute()
   title: string;
