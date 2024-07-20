@@ -84,7 +84,7 @@ export class CommunityService {
       
       // Update only the fields that are provided in the update DTO
       const updatedCommunity = Object.assign(existingCommunity, {
-        creator_id: creator_id !== undefined ? creator_id : existingCommunity.creator_id,
+        _id:id,
         name: name !== undefined ? name : existingCommunity.name,
         description: description !== undefined ? description : existingCommunity.description,
         thumbnail_url: thumbnail_url !== undefined ? thumbnail_url : existingCommunity.thumbnail_url

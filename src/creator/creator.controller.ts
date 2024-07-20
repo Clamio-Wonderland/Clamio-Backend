@@ -19,16 +19,16 @@ export class CreatorController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.creatorService.findOne(+id);
+    return this.creatorService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCreatorDto: UpdateCreatorDto) {
-    return this.creatorService.update(+id, updateCreatorDto);
+    return this.creatorService.update(id, updateCreatorDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.creatorService.remove(+id);
+    return this.creatorService.remove(id);
   }
 }

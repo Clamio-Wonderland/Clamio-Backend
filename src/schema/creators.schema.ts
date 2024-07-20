@@ -1,11 +1,11 @@
 // src/clamio-coin/clamio-coin.entity.ts
 
-import { attribute, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
 // creator schema;
-@table('Creator')
+@table('creator')
 export class Creator {
-  @attribute()
+  @hashKey()
   _id: string;
 
   @attribute()
