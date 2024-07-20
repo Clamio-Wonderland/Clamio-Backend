@@ -3,8 +3,8 @@ import * as AWS from 'aws-sdk';
 
 AWS.config.update({
     region: "us-east-1",
-    accessKeyId: "AKIAYDYCMARVQBD334O6",
-    secretAccessKey: "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",
+    accessKeyId: "AKIAYDYCMARVWXT3UX5V",
+    secretAccessKey: "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",
 });
 
 const dynamoDBClientV2 = new AWS.DynamoDB();

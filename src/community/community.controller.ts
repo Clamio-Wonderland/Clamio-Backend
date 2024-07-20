@@ -15,22 +15,26 @@ export class CommunityController {
   }
 
   @Get()
-  findAll() {
-    return this.communityService.findAll();
+  @UseGuards(JwtAuthGuard)
+  async findAll() {
+    return await this.communityService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
-    return this.communityService.findOne(+id);
+    return this.communityService.findOne(id);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateCommunityDto: UpdateCommunityDto) {
-    return this.communityService.update(+id, updateCommunityDto);
+    return this.communityService.update(id, updateCommunityDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
-    return this.communityService.remove(+id);
+    return this.communityService.remove(id);
   }
 }
