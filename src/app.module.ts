@@ -27,7 +27,9 @@ import { UploadModule } from './upload/upload.module';
     DynamooseModule.forRoot(),
 
     // Environment configuration
+
     ConfigModule.forRoot({
+      isGlobal:true,
       envFilePath: '.env'
     }),
 
