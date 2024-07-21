@@ -1,9 +1,9 @@
-import { attribute, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
 @table('ClamioCoin')
 export class ClamioCoin {
-  @attribute()
-  id: number;
+  @hashKey()
+  _id: string;
 
   @attribute()
   user_id: number;
