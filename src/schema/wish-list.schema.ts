@@ -1,10 +1,10 @@
-import { attribute, table } from "@aws/dynamodb-data-mapper-annotations";
+import { attribute, hashKey, table } from "@aws/dynamodb-data-mapper-annotations";
 
 @table('wishlist')
 export class Wishlist {
-    @attribute()
-    user_id: number;
+    @hashKey()
+    user_id: string;
 
     @attribute()
-    product_id: number;
+    product_id: string[];
 }

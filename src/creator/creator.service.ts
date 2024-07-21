@@ -4,20 +4,23 @@ import { UpdateCreatorDto } from './dto/update-creator.dto';
 import { Creator } from 'src/schema/creators.schema';
 import { dataMapper } from '../config/data-mapper.config';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { hostname } from 'os';
 const http = require('http')
 
 
 
 @Injectable()
 export class CreatorService {
+  private readonly dataMapper: DataMapper ;
   constructor() {
-
+    this.dataMapper = dataMapper
   }
-  private readonly dataMapper: DataMapper = dataMapper;
-  async create(createCreatorDto: CreateCreatorDto) {
-    const { user_id, title, description, website, avatar, social_link, expertise, average_rating, follower, total_sales, earnings, bank_account } = createCreatorDto;
 
+  async create(createCreatorDto: CreateCreatorDto) {
+
+    
+
+
+    const { user_id, title, description, website, avatar, social_link, expertise, average_rating, follower, total_sales, earnings, bank_account } = createCreatorDto;
     const creator = Object.assign(new Creator(), {
       _id: user_id,
       user_id: user_id,
@@ -35,8 +38,17 @@ export class CreatorService {
 
     })
 
+    // check if the user with given user_id exist the proceed
+
     try {
-      const result = await this.dataMapper.put(creator);
+      
+    } 
+    catch (error) {
+      
+    }
+
+    try {
+      const result = await this . dataMapper.put(creator);
       return result;
     } catch (error) {
       console.log(error);
@@ -56,7 +68,8 @@ export class CreatorService {
       }
 
       return creators;
-    } catch (error) {
+    } 
+    catch (error) {
       throw error;
     }
   }
@@ -77,9 +90,10 @@ export class CreatorService {
 
 
   async update(id: string, updateCreatorDto: UpdateCreatorDto) {
+
     let existedCreator = await this.dataMapper.get(Object.assign(new Creator, { _id: id }));
 
-    const { title, description, website, avatar, social_link, expertise, average_rating, follower, total_sales, earnings, bank_account } = updateCreatorDto;
+    const { title, description, website, avatar, social_link, expertise,  bank_account } = updateCreatorDto;
 
     const creator = Object.assign(new Creator(), {
       _id : existedCreator._id,
@@ -89,10 +103,6 @@ export class CreatorService {
       avatar: avatar !== undefined ? avatar : existedCreator.avatar,
       social_link: social_link !== undefined ? social_link : existedCreator.social_link,
       expertise: expertise !== undefined ? expertise : existedCreator.expertise,
-      average_rating: average_rating !== undefined ? average_rating : existedCreator.average_rating,
-      follower: follower !== undefined ? follower : existedCreator.follower,
-      total_sales: total_sales !== undefined ? total_sales : existedCreator.total_sales,
-      earnings: earnings !== undefined ? earnings : existedCreator.earnings,
       bank_account: bank_account !== undefined ? bank_account : existedCreator.bank_account,
 
     });

@@ -1,9 +1,9 @@
-import { table, attribute } from '@aws/dynamodb-data-mapper-annotations';
+import { table, attribute, hashKey } from '@aws/dynamodb-data-mapper-annotations';
 
 @table('Achievement')
 export class Achievement {
-  @attribute()
-  id: number;
+  @hashKey()
+  _id: string;
 
   @attribute()
   name: string;

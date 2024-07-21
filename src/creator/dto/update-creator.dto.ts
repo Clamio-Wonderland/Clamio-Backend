@@ -1,12 +1,14 @@
+import { IsOptional, IsString } from "class-validator";
 
 
 export class UpdateCreatorDto {
   
-    
-    
+    @IsOptional()
+    @IsString()
     title: string;
 
-    
+    @IsOptional()
+    @IsString()
     
     description: string;
 
@@ -24,23 +26,6 @@ export class UpdateCreatorDto {
     
     
     expertise: string;
-
-    
-    
-    average_rating: number;
-
-    
-    
-    follower: number;
-
-    
-    
-    total_sales: number;
-
-    
-    
-    earnings: number;
-
     
     
     bank_account: number;

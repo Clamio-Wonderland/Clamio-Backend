@@ -1,6 +1,6 @@
 // src/clamio-coin/clamio-coin.entity.ts
 
-import { attribute, table } from '@aws/dynamodb-data-mapper-annotations';
+import { attribute, hashKey, table } from '@aws/dynamodb-data-mapper-annotations';
 
 export enum ProductCategory {
   TRAVEL_GUIDE = 'travel_guide',
@@ -13,8 +13,8 @@ export enum ProductCategory {
 
 @table('Product')
 export class Product {
-  @attribute()
-  id: number;
+  @hashKey()
+  _id: number;
 
   @attribute()
   title: string;
