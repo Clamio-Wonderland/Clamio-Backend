@@ -47,7 +47,7 @@ export class CommunityService {
     const communities: Community[] = [];
     const iterator = this.dataMapper.scan({
       valueConstructor: Community,
-      limit: 20
+      limit: 20,
     });
 
     for await (const community of iterator) {
@@ -61,6 +61,7 @@ export class CommunityService {
 
 
   async findOne(id: string) {
+
 
 
     try {

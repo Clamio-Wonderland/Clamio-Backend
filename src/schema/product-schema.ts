@@ -11,16 +11,22 @@ export enum ProductCategory {
   DIGITAL_ART = 'digital_art',
 }
 
-@table('Product')
+@table('product')
 export class Product {
   @hashKey()
-  _id: number;
+  _id: string;
 
   @attribute()
   title: string;
 
   @attribute()
   description: string;
+
+  @attribute()
+  createdon : Date
+
+  @attribute()
+  updatedon : Date
 
   @attribute()
   category: ProductCategory;
