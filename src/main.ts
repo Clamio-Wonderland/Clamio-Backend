@@ -7,7 +7,6 @@ import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-
 dotenv.config();
 
 async function bootstrap() {
@@ -19,6 +18,7 @@ async function bootstrap() {
       secret: process.env.SESSION_SECRET || 'default-secret', // Use env variable for secret
       resave: false,
       saveUninitialized: false,
+      cookie: { secure: true, sameSite: 'strict' },
     }),
   );
 
@@ -38,4 +38,3 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
-

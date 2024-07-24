@@ -29,15 +29,17 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      maxAge: 3600000 * 5, //  Example: 5 hours expiration time
+      maxAge: 3600000 * 24, //  Example: 5 hours expiration time
+    });
+    res.cookie('user', JSON.stringify({ email, id: profileId }), {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 3600000 * 24, // Example: 5 hours expiration time
     });
 
     // Redirect or send a response as needed
     return res.redirect('/'); // Example: Redirect to home page
-
-    // return {
-    //   user: req.user,
-    // };
   }
 
   @Get('logout')
@@ -48,23 +50,25 @@ export class AuthController {
       secure: true,
       sameSite: 'strict',
     });
+    res.clearCookie('user', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
 
     // Optionally, redirect or send a response as needed
     return res.send({ message: 'Logged out successfully' });
   }
 
   @Get('me')
-  // @UseGuards(AuthGuard('google'))
   @UseGuards(JwtAuthGuard)
   getUserInfo(@Req() req) {
-    // if (req.user) {
-    //   return {
-    //     message: 'user logged in',
-    //     user: req.user,
-    //   };
-    // } else {
-    //   return { message: 'User not found' };
-    // }
-    return 'user verified';
+    const userCookie = req.cookies['user'];
+    const user = userCookie ? JSON.parse(userCookie) : null;
+
+    return {
+      message: 'user logged in',
+      user: req.user || user, // Use req.user if JwtAuthGuard is used, otherwise use session
+    };
   }
 }

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -12,6 +22,11 @@ export class UserController {
   @UseGuards(AuthGuard('google'))
   getProfile(@Req() req) {
     return 'user logged in ';
+  }
+
+  @Get('getAllUsers')
+  getUsers() {
+    return this.userService.getAllUsers();
   }
 
   // @Post()

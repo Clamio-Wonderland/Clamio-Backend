@@ -9,13 +9,13 @@ import { GoogleStrategy } from './strategies/google.strategy';
 
 // Database connection
 import { DynamooseModule } from 'nestjs-dynamoose';
-
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CommunityModule } from './community/community.module';
 import { CreatorModule } from './creator/creator.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { UploadModule } from './upload/upload.module';
+import { UserAuthenticationModule } from './user-authentication/user-authentication.module';
 
 @Module({
   imports: [
@@ -29,32 +29,29 @@ import { UploadModule } from './upload/upload.module';
     // Environment configuration
 
     ConfigModule.forRoot({
-      isGlobal:true,
-      envFilePath: '.env'
+      isGlobal: true,
+      envFilePath: '.env',
     }),
 
-    // Authentication modules 
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'), // Use environment variable
-        signOptions: { expiresIn: '2d' },
-      }),
-      inject: [ConfigService], // Inject ConfigService to use in useFactory
+    // Authentication modules
+    JwtModule.register({
+      secret: 'mySecretJWTPassword', // Ensure you provide a secret
+      signOptions: { expiresIn: '2d' }, // Set token expiration
     }),
 
     PassportModule.register({ defaultStrategy: 'google' }), // Register Google strategy as default
 
-    AuthModule, 
+    AuthModule,
 
     // basic modules
-    UserModule, 
-    CommunityModule, 
+    UserModule,
+    CommunityModule,
     ProductModule,
-    UserModule, 
-    CreatorModule, 
-    WishlistModule, 
+    UserModule,
+    CreatorModule,
+    WishlistModule,
     UploadModule,
+    UserAuthenticationModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],
