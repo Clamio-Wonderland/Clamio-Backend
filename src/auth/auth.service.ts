@@ -12,7 +12,7 @@ export class AuthService {
 
   generateJwt(user) {
     const payload = { id: user.googleId, email: user.email };
-    const jwtSecret = process.env.JWT_SECRET || 'jwtSecret';
+    const jwtSecret = process.env.JWT_SECRET || 'mySecretJWTPassword';
     return this.JwtService.sign(payload, { secret: jwtSecret });
   }
 

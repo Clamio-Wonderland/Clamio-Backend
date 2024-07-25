@@ -4,23 +4,31 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
-    //@ts-ignore
-    const token = request.cookies['jwt']; // Assuming token is stored in a cookie named 'jwt'
+    const cookie = request.cookies['user'];
 
-    if (token) {
-      return true; // Allow the request to proceed
-    } else {
-      throw new UnauthorizedException('Unauthorized access'); // Throw an error if token is missing
+    if (!cookie) {
+      throw new UnauthorizedException('No cookie found');
+    }
+
+    try {
+      const userObject = JSON.parse(cookie);
+      const secret = process.env.JWT_SECRET || 'mySecretJwtPassword';
+      const decoded = jwt.verify(userObject.token, secret); // Verify token from cookie
+      request.user = decoded; // Attach decoded token to the request
+      return true;
+    } catch (err) {
+      throw new UnauthorizedException('Unauthorized access');
     }
   }
 
   handleRequest(err, user, info) {
-    // Handle the result of Passport's authentication here
     if (err || !user) {
       throw err || new UnauthorizedException('Unauthorized access');
     }

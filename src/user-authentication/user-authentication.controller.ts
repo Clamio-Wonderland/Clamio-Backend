@@ -8,6 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { UserAuthenticationService } from './user-authentication.service';
 import {
   CreateUserDto,
@@ -27,15 +28,28 @@ export class UserAuthenticationController {
   @Post('login')
   async login(
     @Body(ValidationPipe) loginUserDto: LoginUserDto,
-    @Res() response: any,
+    @Res() res: Response,
   ) {
-    return this.userAuthService.login(loginUserDto, response);
+    const { token, email, id } = await this.userAuthService.login(loginUserDto);
+
+    res.cookie('user', JSON.stringify({ id, email, token }), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    return res.json({
+      message: 'User logged in',
+      user: { id, token, email },
+    });
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
-  async logout(@Res() response: any) {
-    return this.userAuthService.logout(response);
+  async logout(@Res() res: Response) {
+    res.clearCookie('user');
+    return res.json({
+      message: 'user successfully logged out',
+    });
   }
 
   @Get('me')

@@ -24,14 +24,7 @@ export class AuthController {
     // Generate JWT token
     const token = this.authService.generateJwt({ email, id: profileId });
 
-    // Send token as a cookie
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 3600000 * 24, //  Example: 5 hours expiration time
-    });
-    res.cookie('user', JSON.stringify({ email, id: profileId }), {
+    res.cookie('user', JSON.stringify({ email, token }), {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -45,17 +38,11 @@ export class AuthController {
   @Get('logout')
   logout(@Res() res: Response) {
     // Clear the cookie on logout
-    res.clearCookie('jwt', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-    });
     res.clearCookie('user', {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
     });
-
     // Optionally, redirect or send a response as needed
     return res.send({ message: 'Logged out successfully' });
   }
@@ -67,7 +54,6 @@ export class AuthController {
     const user = userCookie ? JSON.parse(userCookie) : null;
 
     return {
-      message: 'user logged in',
       user: req.user || user, // Use req.user if JwtAuthGuard is used, otherwise use session
     };
   }

@@ -15,15 +15,29 @@ export class user {
 
   //username is optional field, if user login with google then we will get name otherwise not
   @attribute()
-  username: string;
+  username?: string;
 
   //password is an optional field , if user login with google we don't get password
   @attribute()
   password?: string;
 
+  @attribute()
+  bio?: string;
+
   //firstname is an optional filed
   @attribute()
   firstname?: string;
+
+  @attribute()
+  creator?: boolean;
+
+  @attribute()
+  authMethod: {
+    general: boolean;
+    google: boolean;
+    facebook: boolean;
+    instagram: boolean;
+  };
 
   //lastname is an optional filed
   @attribute()

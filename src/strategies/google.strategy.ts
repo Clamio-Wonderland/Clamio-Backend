@@ -47,11 +47,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     try {
       const { name, emails, photos, id } = profile;
       const userData = {
-        _id: id, // Changed from `id` to `_id`
         email: emails[0].value,
         firstName: name.givenName,
         lastName: name.familyName,
         profilePicture: photos[0].value,
+        authMethod: {
+          general: false,
+          google: true,
+          facebook: false,
+          instagram: false,
+        },
         createdAt: new Date(), // Add this if you want to set createdAt
       };
 
