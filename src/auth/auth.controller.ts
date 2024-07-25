@@ -24,7 +24,7 @@ export class AuthController {
     // Generate JWT token
     const token = this.authService.generateJwt({ email, id: profileId });
 
-    res.cookie('user', JSON.stringify({ email, token }), {
+    res.cookie('user', JSON.stringify({ email, token, id: profileId }), {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',

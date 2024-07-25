@@ -4,9 +4,9 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { ConfigService } from '@nestjs/config';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dataMapper } from '../config/data-mapper.config';
-import { user } from 'src/schema/user-schema';
 import { DynamoDB } from 'aws-sdk';
 import { dynamodbClient } from 'src/config/dynamoose.config';
+import { user as User } from '../schema/user-schema';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -23,18 +23,24 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     this.dataMapper = dataMapper;
   }
 
-  private async checkTableExists(tableName: string): Promise<boolean> {
-    try {
-      await dynamodbClient.describeTable({ TableName: tableName });
-      console.log(`Table "${tableName}" exists.`);
-      return true;
-    } catch (error) {
-      if (error.code === 'ResourceNotFoundException') {
-        console.log(`Table "${tableName}" does not exist.`);
-        return false;
-      } else {
-        throw error;
-      }
+  private async findOneByEmail(email: string): Promise<User | null> {
+    const iterator = this.dataMapper.scan(User, {
+      filter: {
+        type: 'Equals',
+        subject: 'email',
+        object: email,
+      },
+    });
+
+    const users: User[] = [];
+    for await (const user of iterator) {
+      users.push(user);
+    }
+
+    if (users.length > 0) {
+      return users[0];
+    } else {
+      return null;
     }
   }
 
@@ -60,17 +66,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         createdAt: new Date(), // Add this if you want to set createdAt
       };
 
-      const tableExists = await this.checkTableExists('user');
-      if (tableExists) {
-        const userEntity = Object.assign(new user(), userData);
-        await this.dataMapper.put(userEntity);
-        console.log('users saved');
-      } else {
-        console.log('Table does not exist, user not saved.');
+      const user = await this.findOneByEmail(userData.email);
+      if (!user) {
+        const userEntity = Object.assign(new User(), userData);
       }
-
-      console.log(userData);
-      // console.log(profile);
 
       done(null, user);
     } catch (error) {
