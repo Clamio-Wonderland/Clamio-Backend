@@ -51,4 +51,14 @@ export class ProductController {
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
   }
+
+  @Get('/topSellingProduct')
+  findTopSellingProducts() {
+    return this.productService.findTopSellingProducts();
+  }
+
+  @Get('/topSellingProduct')
+  findHotAndNewProducts() {
+    return this.productService.findHotAndNewProducts();
+  }
 }

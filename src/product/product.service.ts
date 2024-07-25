@@ -132,5 +132,15 @@ export class ProductService {
     }
   }
 
+  findTopSellingProducts() {
+    // return using pagination
+    // the product purchased by most user
+    return 'this are the top selling products.'
+  }
   
+  findHotAndNewProducts() {
+    // recently added products
+    // sort by created timestamp and return by pagination
+    return 'this are the host and new products'
+  }
 }
