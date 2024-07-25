@@ -16,6 +16,7 @@ import { CreatorModule } from './creator/creator.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { UploadModule } from './upload/upload.module';
 import { UserAuthenticationModule } from './user-authentication/user-authentication.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { UserAuthenticationModule } from './user-authentication/user-authenticat
     WishlistModule,
     UploadModule,
     UserAuthenticationModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],

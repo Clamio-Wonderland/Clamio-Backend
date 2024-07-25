@@ -5,9 +5,9 @@ import * as dotenv from 'dotenv';
 dotenv.config()
 
 AWS.config.update({
-    region:process.env.AWS_REGION,
-    accessKeyId:process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region:'us-east-1',
+    accessKeyId:'AKIAYDYCMARVWXT3UX5V',
+    secretAccessKey: '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',
 });
 
 const dynamoDBClientV2 = new AWS.DynamoDB();
