@@ -144,3 +144,35 @@ export class ProductService {
     return 'this are the host and new products'
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// update average_review  
+// update total purchase

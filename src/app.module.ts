@@ -17,6 +17,9 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { UploadModule } from './upload/upload.module';
 import { UserAuthenticationModule } from './user-authentication/user-authentication.module';
 import { OrderModule } from './order/order.module';
+import { ReviewModule } from './review/review.module';
+import { LikeModule } from './like/like.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -54,6 +57,9 @@ import { OrderModule } from './order/order.module';
     UploadModule,
     UserAuthenticationModule,
     OrderModule,
+    ReviewModule,
+    LikeModule,
+    InvoiceModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],
