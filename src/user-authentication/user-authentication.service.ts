@@ -85,7 +85,6 @@ export class UserAuthenticationService {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   async getUser(request: any) {
     const token = request.cookies['jwt'];
     const decoded = request.user;
