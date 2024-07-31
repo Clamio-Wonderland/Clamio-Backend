@@ -5,7 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ParseFilePipe, FileTypeValidator } from '@nestjs/common';
-import { application } from 'express';
+
 
 
 @Controller('product')
@@ -53,12 +53,16 @@ export class ProductController {
   }
 
   @Get('/topSellingProduct')
+  // @UseGuards(JwtAuthGuard)
   findTopSellingProducts() {
     return this.productService.findTopSellingProducts();
   }
 
-  @Get('/topSellingProduct')
+ 
+  @Get('/hotAndNewProduct')
+  // @UseGuards(JwtAuthGuard)
   findHotAndNewProducts() {
+    
     return this.productService.findHotAndNewProducts();
   }
 }
