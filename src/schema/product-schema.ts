@@ -48,4 +48,7 @@ export class Product {
 
   @attribute()
   is_active: boolean;
+
+  @attribute()
+  no_of_time_buyes : number
 }
