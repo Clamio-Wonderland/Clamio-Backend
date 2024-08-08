@@ -183,41 +183,10 @@ export class ProductService {
     // Otherwise, return the last 10 products
     return products.slice(products.length - 10);
 }
-
-<<<<<<< HEAD
-
+// update average_review 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// update average_review  
 // update total purchase
-=======
 }
 
 
->>>>>>> 62d14fc0d589d86aab39d890da5d90d9936319d5
