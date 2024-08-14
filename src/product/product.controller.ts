@@ -19,6 +19,7 @@ export class ProductController {
     return this.productService.findAll();
   }
 
+  
   @Post()
   // @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileFieldsInterceptor([
@@ -61,6 +62,7 @@ export class ProductController {
   }
 
  @Get('filter/hotAndNewProduct')
+  // @Get('/hotAndNewProduct')
   // @UseGuards(JwtAuthGuard)
   findHotAndNewProducts() {
    
