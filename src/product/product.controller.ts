@@ -11,7 +11,7 @@ import { ParseFilePipe, FileTypeValidator } from '@nestjs/common';
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
-
+  
   @Post()
   // @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileFieldsInterceptor([
@@ -58,11 +58,10 @@ export class ProductController {
     return this.productService.findTopSellingProducts();
   }
 
- 
   @Get('/hotAndNewProduct')
   // @UseGuards(JwtAuthGuard)
   findHotAndNewProducts() {
     
-    return this.productService.findHotAndNewProducts();
-  }
+    return "hello";
+  } 
 }
