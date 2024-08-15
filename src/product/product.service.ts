@@ -21,7 +21,6 @@ export class ProductService {
     const {
       title,
       description,
-
       category,
       price,
       content_type,
@@ -48,7 +47,7 @@ export class ProductService {
       content_type,
       creator_id,
       active,
-      no_of_time_buyes:0
+      no_of_time_buyes: 0
     });
     try {
       const savedProduct = await this.dataMapper.put(product);
@@ -130,17 +129,17 @@ export class ProductService {
   }
 
   async findTopSellingProducts() {
-    try{
+    try {
       const iterator = this.dataMapper.scan(Product);
-      const products : Product[]=[];
+      const products: Product[] = [];
 
-      for await(const product of iterator){
+      for await (const product of iterator) {
         products.push(product);
       }
 
       return this.sortProduct(products);
     }
-    catch(error){
+    catch (error) {
       throw error;
     }
   }
@@ -150,22 +149,18 @@ export class ProductService {
       const date = new Date();
       date.setDate(date.getDate() - 3);
 
-      console.log(date);
-      const iterator = this.dataMapper.scan(Product, {
-        filter: {
-          type: 'GreaterThanOrEqualTo',
-          subject: 'createdon',
-          object: date,
-        },
-      });
+      
+      const iterator = this.dataMapper.scan(Product);
       const products: Product[] = [];
-  
+
       for await (const product of iterator) {
-        products.push(product);
+        if(product.createdon >= date){
+          products.push(product)
+        }
       }
-  
+
       return products;
-    } 
+    }
     catch (error) {
       console.error('Error fetching hot and new products:', error);
       throw new Error('Could not fetch hot and new products');
@@ -174,19 +169,19 @@ export class ProductService {
   sortProduct(products: Product[]): Product[] {
     // Sort the products by price in ascending order
     products.sort((a, b) => a.price - b.price);
-    
+
     // If there are 10 or fewer products, return them all
     if (products.length <= 10) {
-        return products;
+      return products;
     }
-    
+
     // Otherwise, return the last 10 products
     return products.slice(products.length - 10);
-}
-// update average_review 
+  }
+  // update average_review 
 
 
-// update total purchase
+  // update total purchase
 }
 
 

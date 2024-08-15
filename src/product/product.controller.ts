@@ -12,6 +12,13 @@ import { ParseFilePipe, FileTypeValidator } from '@nestjs/common';
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
+  @Get()
+  // @UseGuards(JwtAuthGuard)
+  findAll() {
+
+    return this.productService.findAll();
+  }
+
   @Post()
   // @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileFieldsInterceptor([
@@ -28,12 +35,6 @@ export class ProductController {
   }
 
 
-
-  @Get()
-  // @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.productService.findAll();
-  }
 
   @Get(':id')
   // @UseGuards(JwtAuthGuard)
@@ -52,17 +53,19 @@ export class ProductController {
     return this.productService.remove(id);
   }
 
-  @Get('/topSellingProduct')
+  @Get('filter/topSellingProduct')
   // @UseGuards(JwtAuthGuard)
   findTopSellingProducts() {
+    
     return this.productService.findTopSellingProducts();
   }
 
- 
-  @Get('/hotAndNewProduct')
+ @Get('filter/hotAndNewProduct')
   // @UseGuards(JwtAuthGuard)
   findHotAndNewProducts() {
+   
     
     return this.productService.findHotAndNewProducts();
   }
+  
 }
