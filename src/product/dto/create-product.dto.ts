@@ -19,13 +19,8 @@ import { ProductCategory } from 'src/schema/product-schema';
     @IsDecimal()
     @IsNotEmpty()
     price: string; // price of the product as a decimal string
-    // @IsUrl()
-    // @IsNotEmpty()
-    // thumbnail_url: string;
-  
-    // @IsUrl()
-    // @IsNotEmpty()
-    // file_url: string; // URL to download the file ('pdf', 'mp3', etc.)
+    
+    
   
     @IsString()
     content_type?: string; // optional field to specify product type, such as .mp3, .pdf, etc.

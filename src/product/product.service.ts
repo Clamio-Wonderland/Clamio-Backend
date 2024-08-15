@@ -5,6 +5,8 @@ import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { Product } from 'src/schema/product-schema';
 import { UploadService } from 'src/upload/upload.service';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { ObjectLockEnabled } from '@aws-sdk/client-s3';
 
 
 @Injectable()
@@ -37,7 +39,7 @@ export class ProductService {
       _id: uuidv4(),
       title,
       description,
-      slug,  // Include slug here
+      slug,  
       createdon: new Date(),
       updatedon: new Date(),
       category,
@@ -47,8 +49,9 @@ export class ProductService {
       content_type,
       creator_id,
       active,
-      no_of_time_buyes: 0
+      total_purchase: 0
     });
+    
     try {
       const savedProduct = await this.dataMapper.put(product);
       return savedProduct;
@@ -180,8 +183,30 @@ export class ProductService {
   }
   // update average_review 
 
+  update_average_review(){
+
+  }
+
 
   // update total purchase
+
+  async update_total_purchase(_id: string) {
+    try {
+      // Retrieve the product using the findOne method
+      const product = await this.findOne(_id);
+  
+      // Increment the total_purchase attribute
+      product.total_purchase += 1;
+  
+      // Update the product in the database
+      return await this.dataMapper.put(product);
+    } catch (error) {
+      // Handle any errors that occur during the process
+      throw error;
+    }
+  }
+  
+  
 }
 
 
