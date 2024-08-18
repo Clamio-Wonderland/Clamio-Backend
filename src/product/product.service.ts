@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { Product } from 'src/schema/product-schema';
@@ -18,6 +17,7 @@ export class ProductService {
     const {
       title,
       description,
+
       category,
       price,
       content_type,
@@ -152,61 +152,18 @@ export class ProductService {
     }
   }
 
-  async findTopSellingProducts(page: number, limit: number) {
-    // Implement logic to return top-selling products with pagination
-    // Assuming you have a mechanism to track product sales
-    const products: Product[] = [];
-    const skip = (page - 1) * limit;
-
-    try {
-      const iterator = this.dataMapper.scan(Product, {
-        limit,
-        startKey: skip > 0 ? { _id: skip } : undefined,
-        // Apply your filtering logic here
-      });
-
-      for await (const product of iterator) {
-        // Filter and sort logic based on sales data
-        products.push(product);
-      }
-      return {
-        products,
-        total: products.length,
-        page,
-        limit,
-      };
-    } catch (error) {
-      console.error('Error fetching top-selling products:', error);
-      throw error;
-    }
+  findTopSellingProducts() {
+    // return using pagination
+    // the product purchased by most user
+    return 'this are the top selling products.';
   }
 
-  async findHotAndNewProducts(page: number, limit: number) {
-    // Implement logic to return hot and new products with pagination
-    // Sort by creation timestamp
-    const products: Product[] = [];
-    const skip = (page - 1) * limit;
-
-    try {
-      const iterator = this.dataMapper.scan(Product, {
-        limit,
-        startKey: skip > 0 ? { _id: skip } : undefined,
-        // Sort by created timestamp logic here
-      });
-
-      for await (const product of iterator) {
-        // Apply sorting and filtering logic for hot and new products
-        products.push(product);
-      }
-      return {
-        products,
-        total: products.length,
-        page,
-        limit,
-      };
-    } catch (error) {
-      console.error('Error fetching hot and new products:', error);
-      throw error;
-    }
+  findHotAndNewProducts() {
+    // recently added products
+    // sort by created timestamp and return by pagination
+    return 'this are the host and new products';
   }
 }
+
+// update average_review
+// update total purchase

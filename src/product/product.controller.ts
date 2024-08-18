@@ -22,7 +22,6 @@ import {
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { ParseFilePipe, FileTypeValidator } from '@nestjs/common';
-import { application } from 'express';
 
 @Controller('product')
 export class ProductController {
@@ -80,18 +79,12 @@ export class ProductController {
   }
 
   @Get('/topSellingProduct')
-  findTopSellingProducts(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
-    return this.productService.findTopSellingProducts(page, limit);
+  findTopSellingProducts() {
+    return this.productService.findTopSellingProducts();
   }
 
   @Get('/topSellingProduct')
-  findHotAndNewProducts(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
-    return this.productService.findHotAndNewProducts(page, limit);
+  findHotAndNewProducts() {
+    return this.productService.findHotAndNewProducts();
   }
 }
