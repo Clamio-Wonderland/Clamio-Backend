@@ -181,6 +181,9 @@ export class ProductService {
     // Otherwise, return the last 10 products
     return products.slice(products.length - 10);
   }
+
+
+  
   // update average_review 
 
   update_average_review(){
