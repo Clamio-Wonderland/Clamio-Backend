@@ -163,7 +163,26 @@ export class ProductService {
     // sort by created timestamp and return by pagination
     return 'this are the host and new products';
   }
-}
+  sortProduct(products: Product[]): Product[] {
+    // Sort the products by price in ascending order
+    products.sort((a, b) => a.price - b.price);
 
-// update average_review
-// update total purchase
+    // If there are 10 or fewer products, return them all
+    if (products.length <= 10) {
+      return products;
+    }
+
+    // Otherwise, return the last 10 products
+    return products.slice(products.length - 10);
+  }
+  // update average_review
+  updateAverageReview() {
+    // body
+  }
+
+  // update average_review
+  // update total purchase
+  updateTotalPurchase() {
+    // body
+  }
+}
