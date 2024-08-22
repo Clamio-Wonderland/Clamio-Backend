@@ -10,11 +10,12 @@ import {
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
 import { PaginationDto } from './dto/pagination-dto';
 import { Product } from 'src/schema/product-schema';
 import { paginationToken } from 'aws-sdk/clients/supportapp';
 import { Review } from 'src/schema/review-schema';
+import { PurchaseCheckMiddler } from 'src/middleware/purchase-check-middleware';
+import { UpdateReviewDto } from './dto/update-review.dto';
 
 @Controller('review')
 export class ReviewController {
@@ -27,6 +28,24 @@ export class ReviewController {
   ): Promise<Review[]> {
     const { page = 1, limit = 10 } = PaginationDto;
     return this.reviewService.getReviewsByProductId(productId, page, limit);
+  }
+
+  @Post('product/user/createReview/:productId')
+  async giveReview(
+    @Param('productId') ProductId: string,
+    @Body('userId') userId: string,
+    CreateReviewDto: CreateReviewDto,
+  ) {
+    return this.reviewService.createReview(ProductId, userId, CreateReviewDto);
+  }
+
+  @Post('product/user/updateReview/:productId')
+  async updateReview(
+    @Param('productId') productId: string,
+    @Body('userId') userId: string,
+    updateReviewDto: UpdateReviewDto,
+  ) {
+    return this.reviewService.updateReview(productId, userId, updateReviewDto);
   }
 
   @Get('product/user/:productId')
