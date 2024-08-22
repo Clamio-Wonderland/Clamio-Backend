@@ -23,7 +23,7 @@ export class Product {
   description: string;
 
   @attribute()
-  createdon : Date
+  createdon : Date;
 
   @attribute()
   updatedon : Date
@@ -44,11 +44,14 @@ export class Product {
   content_type: string;
 
   @attribute()
-  creator_id: number;
+  creator_id: string;
 
   @attribute()
   is_active: boolean;
 
   @attribute()
-  no_of_time_buyes : number
+  total_purchase : number;
+
+  @attribute()
+  creator_name : string;
 }

@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
-import { Order, Status } from 'src/schema/order.schema';
+import { Order, Status, Item } from 'src/schema/order.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { user as User } from 'src/schema/user-schema';
@@ -13,16 +12,17 @@ export class OrderService {
   constructor() {
     this.dataMapper = dataMapper;
   }
-  async createOrder(orderData: Partial<Order>, res: Request): Promise<any> {
-    const { product_id, amount } = orderData;
-    const user_id = await this.getUser(res);
+  async createOrder(orderData: CreateOrderDto, res: Request): Promise<any> {
+    const { user_id, product_id, quantity, price, thumbnai_url, amount, status } = orderData;
+    // const user_id = await this.getUser(res);
+
+    const item = new Item(product_id, quantity, price, new Date(), thumbnai_url);
 
     const order = new Order();
     order._id = uuidv4();
     order.user_id = user_id;
-    order.product_id = product_id;
-    order.created_at = new Date();
-    order.updated_at = new Date();
+    order.items.push(item);
+    order.purchase_date = new Date();
     order.amount = amount;
     order.status = Status.PENDING;
     await this.dataMapper.put(order);
@@ -95,15 +95,45 @@ export class OrderService {
 
     return user._id;
   }
-  findAll() {
-    return `This action returns all order`;
+  async findAll(): Promise<Order[]> {
+    const orders: Order[] = [];
+    const iterator = await this.dataMapper.scan(Order);
+
+    try {
+      for await (const order of iterator) {
+        orders.push(order);
+      }
+    } catch (error) {
+
+      throw new Error('Error retrieving orders');
+    }
+
+    return orders;
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+
+  async update(id: number, updatedOrder: Partial<Order>) {
+    try {
+      let order = await this.dataMapper.get(Object.assign(new Order, { _id: id }));
+
+      if (!order) {
+        return undefined;
+      }
+      order = Object.assign(order, updatedOrder);
+      return this.dataMapper.put(order);
+    }
+    catch (error) {
+      throw error;
+    }
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: number) {
+    try{
+      return await this.dataMapper.delete(Object.assign(new Order,{_id:id}));
+    }
+    catch(error){
+      throw error;
+    }
   }
 }
