@@ -3,6 +3,7 @@ import { CommunityService } from './community.service';
 import { CommunityController } from './community.controller';
 import { UploadService } from 'src/upload/upload.service';
 import { UuidModule } from 'nestjs-uuid';
+import { UploadModule } from 'src/upload/upload.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { UuidModule } from 'nestjs-uuid';
   controllers: [CommunityController],
   providers: [
     CommunityService,
-    UploadService
+    UploadService,
+    UploadModule
   ],
 })
 export class CommunityModule {}
