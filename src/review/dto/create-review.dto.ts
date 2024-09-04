@@ -19,4 +19,8 @@ export class CreateReviewDto {
   @MinLength(10)
   @MaxLength(1000)
   comment: string;
+
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

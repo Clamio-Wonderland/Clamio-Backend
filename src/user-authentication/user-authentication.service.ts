@@ -75,7 +75,7 @@ export class UserAuthenticationService {
     // Generate token
     const payload = { sub: user._id, email: user.email };
     const token = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET || 'mySecretJwtPassword',
+      secret: process.env.JWT_SECRET,
     });
 
     return {
