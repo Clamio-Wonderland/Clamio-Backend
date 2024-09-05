@@ -1,4 +1,6 @@
-service: serverless-example
+
+app: clamio-backend
+service: clamio-serverless-api
 
 plugins:
   - serverless-offline
