@@ -9,7 +9,7 @@ export class DynamoDBService {
 
   constructor() {
     this.client = new DynamoDB({
-      region: 'your-region', // Replace with your AWS region
+      region: 'us-east-1', // Replace with your AWS region
       // Optionally, you can add credentials configuration here if not using default credentials.
     });
   }
