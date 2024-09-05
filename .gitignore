@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /build
-./serverless
+.serverless
 
 # Logs
 logs
