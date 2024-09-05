@@ -5,7 +5,7 @@ import {
   table,
 } from '@aws/dynamodb-data-mapper-annotations';
 
-@table('Review')
+@table('review')
 export class Review {
   @hashKey()
   productId: string;
