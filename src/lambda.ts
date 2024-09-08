@@ -6,6 +6,10 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Callback, Context, Handler } from 'aws-lambda';
+import serverlessExpress from '@vendia/serverless-express';
+
+let server: Handler;
 
 dotenv.config();
 
@@ -15,7 +19,7 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'default-secret', // Use env variable for secret
+      secret: process.env.SESSION_SECRET || 'default-secret',
       resave: false,
       saveUninitialized: false,
       cookie: { secure: true, sameSite: 'strict' },
@@ -29,12 +33,23 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Clamio Backend Api')
-    .setDescription('clamio backend api connected to dynamoDB')
+    .setDescription('Clamio backend API connected to DynamoDB')
     .setVersion('1.0.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.init();
+
+  const expressApp = app.getHttpAdapter().getInstance();
+  return serverlessExpress({ app: expressApp });
 }
-bootstrap();
+
+export const handler: Handler = async (
+  event: any,
+  context: Context,
+  callback: Callback,
+) => {
+  server = server ?? (await bootstrap());
+  return server(event, context, callback);
+};

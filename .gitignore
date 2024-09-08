@@ -3,8 +3,11 @@
 /node_modules
 /build
 .serverless
+clamio-backend
+clamio-backend.zip
 
 # Logs
+*.zip
 logs
 *.log
 npm-debug.log*

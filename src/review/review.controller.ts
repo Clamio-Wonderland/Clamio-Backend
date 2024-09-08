@@ -33,19 +33,17 @@ export class ReviewController {
   @Post('product/user/createReview/:productId')
   async giveReview(
     @Param('productId') ProductId: string,
-    @Body('userId') userId: string,
-    CreateReviewDto: CreateReviewDto,
+    @Body() CreateReviewDto: CreateReviewDto,
   ) {
-    return this.reviewService.createReview(ProductId, userId, CreateReviewDto);
+    return this.reviewService.createReview(ProductId, CreateReviewDto);
   }
 
   @Post('product/user/updateReview/:productId')
   async updateReview(
     @Param('productId') productId: string,
-    @Body('userId') userId: string,
-    updateReviewDto: UpdateReviewDto,
+    @Body() updateReviewDto: UpdateReviewDto,
   ) {
-    return this.reviewService.updateReview(productId, userId, updateReviewDto);
+    return this.reviewService.updateReview(productId, updateReviewDto);
   }
 
   @Get('product/user/:productId')

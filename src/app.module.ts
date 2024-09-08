@@ -21,6 +21,7 @@ import { ReviewModule } from './review/review.module';
 import { LikeModule } from './like/like.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { CartModule } from './cart/cart.module';
+import { DemoModule } from './demo/demo.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { CartModule } from './cart/cart.module';
     LikeModule,
     InvoiceModule,
     CartModule,
+    DemoModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],

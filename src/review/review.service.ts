@@ -8,7 +8,7 @@ import { Review } from 'src/schema/review-schema';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { DataMapper, QueryOptions } from '@aws/dynamodb-data-mapper';
 import { UpdateReviewDto } from './dto/update-review.dto';
-
+import { v4 as uuid } from 'uuid';
 @Injectable()
 export class ReviewService {
   private readonly dataMapper: DataMapper;
@@ -16,11 +16,8 @@ export class ReviewService {
     this.dataMapper = dataMapper;
   }
 
-  async updateReview(
-    productId: string,
-    userId: string,
-    updateReviewDto: UpdateReviewDto,
-  ) {
+  async updateReview(productId: string, updateReviewDto: UpdateReviewDto) {
+    const { userId } = updateReviewDto;
     const query: QueryOptions = {
       filter: {
         type: 'Equals',
@@ -52,6 +49,7 @@ export class ReviewService {
       if (updateReviewDto.comment) {
         reviewToUpdate.comment = updateReviewDto.comment;
       }
+      reviewToUpdate._id = uuid();
       await this.dataMapper.put(reviewToUpdate);
     } catch (error) {
       console.log(error);
@@ -98,15 +96,12 @@ export class ReviewService {
     }
   }
 
-  async createReview(
-    productId: string,
-    userId: string,
-    CreateReviewDto: CreateReviewDto,
-  ) {
-    const { rating, comment } = CreateReviewDto;
+  async createReview(productId: string, CreateReviewDto: CreateReviewDto) {
+    const { rating, comment, userId } = CreateReviewDto;
 
     const newReview = new Review();
     newReview.productId = productId;
+    newReview._id = uuid();
     newReview.userId = userId;
     newReview.rating = rating;
     newReview.comment = comment;
