@@ -19,7 +19,7 @@ import { UserAuthenticationModule } from './user-authentication/user-authenticat
 import { OrderModule } from './order/order.module';
 import { ReviewModule } from './review/review.module';
 import { LikeModule } from './like/like.module';
-import { InvoiceModule } from './invoice/invoice.module';
+// import { InvoiceModule } from './invoice/invoice.module';
 import { CartModule } from './cart/cart.module';
 import { DemoModule } from './demo/demo.module';
 
@@ -61,7 +61,7 @@ import { DemoModule } from './demo/demo.module';
     OrderModule,
     ReviewModule,
     LikeModule,
-    InvoiceModule,
+    // InvoiceModule,
     CartModule,
     DemoModule,
   ],
