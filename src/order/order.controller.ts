@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
-import { Order } from 'src/schema/order.schema';
+import { Order } from '../schema/order.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Controller('order')

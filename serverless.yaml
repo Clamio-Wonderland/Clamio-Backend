@@ -1,22 +1,27 @@
-app: clamio-backend
-service: clamio-serverless-api
-
-plugins:
-  - serverless-offline
+service: clamio-backend
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs18.x
+  memorySize: 1024 # Customize based on your app needs
+  timeout: 30 # In seconds, adjust as necessary
+  environment:
+    SESSION_SECRET: ${env:SESSION_SECRET}
+    SESSION_TABLE: sessionTable  # DynamoDB table for session storage
 
 functions:
-  main:
-    handler: dist/src/serverless.handler
+  api:
+    handler: dist/lambda.handler # Handler from webpack output
     events:
       - http:
-          method: ANY
-          path: /
-          cors: true
-      - http:
-          method: ANY
-          path: '{proxy+}'
-          cors: true
+          path: /{proxy+}
+          method: any
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: './webpack.config.ts'
+    includeModules: true
