@@ -1,27 +1,24 @@
-service: clamio-backend
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+# org: clamio
+app: clamio-backend
+service: clamio-serverless-api
+
+plugins:
+  - serverless-offline
 
 provider:
   name: aws
-  runtime: nodejs18.x
-  memorySize: 1024 # Customize based on your app needs
-  timeout: 30 # In seconds, adjust as necessary
-  environment:
-    SESSION_SECRET: ${env:SESSION_SECRET}
-    SESSION_TABLE: sessionTable  # DynamoDB table for session storage
+  runtime: nodejs20.x
 
 functions:
-  api:
-    handler: dist/lambda.handler # Handler from webpack output
+  main:
+    handler: dist/main
     events:
       - http:
-          path: /{proxy+}
-          method: any
-
-plugins:
-  - serverless-webpack
-  - serverless-offline
-
-custom:
-  webpack:
-    webpackConfig: './webpack.config.ts'
-    includeModules: true
+          method: ANY
+          path: /
+          cors: true
+      - http:
+          method: ANY
+          path: '{proxy+}'
+          cors: true
