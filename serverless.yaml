@@ -12,7 +12,8 @@ provider:
 
 functions:
   main:
-    handler: dist/main
+    handler: dist/src/serverless.handler
+    timeout: 30
     events:
       - http:
           method: ANY
