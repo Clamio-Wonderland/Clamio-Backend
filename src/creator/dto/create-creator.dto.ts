@@ -30,21 +30,5 @@ export class CreateCreatorDto {
 
     @IsNotEmpty()
     @IsNumber()
-    average_rating: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    follower: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    total_sales: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    earnings: number;
-
-    @IsNotEmpty()
-    @IsNumber()
     bank_account: number;
 }

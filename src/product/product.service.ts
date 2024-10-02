@@ -20,6 +20,8 @@ export class ProductService {
 
   async create(createProductDto: CreateProductDto, files): Promise<Product> {
 
+    console.log(createProductDto);
+    console.log(files);
     const {
       title,
       description,
@@ -27,31 +29,31 @@ export class ProductService {
       price,
       content_type,
       creator_id,
-      active
     } = createProductDto;
     const slug = `${title}-${uuidv4()}`;
-
+    
     const thumbnail_url = await this.uploadService.uploadProductImages(files.images);
-    const file_url = await this.uploadService.uploadProduct(files.product[0]);
+    // const file_url = await this.uploadService.uploadProductImages(files.product);
 
 
     const product = Object.assign(new Product(), {
       _id: uuidv4(),
       title,
       description,
-      slug,  
+      slug,
       createdon: new Date(),
       updatedon: new Date(),
       category,
       price,
       thumbnail_url,
-      file_url,
+      file_url:'askdfadkasd',
       content_type,
       creator_id,
-      active,
+      active: true,
       total_purchase: 0
     });
-    
+
+
     try {
       const savedProduct = await this.dataMapper.put(product);
       return savedProduct;
@@ -152,12 +154,12 @@ export class ProductService {
       const date = new Date();
       date.setDate(date.getDate() - 3);
 
-      
+
       const iterator = this.dataMapper.scan(Product);
       const products: Product[] = [];
 
       for await (const product of iterator) {
-        if(product.createdon >= date){
+        if (product.createdon >= date) {
           products.push(product)
         }
       }
@@ -183,10 +185,10 @@ export class ProductService {
   }
 
 
-  
+
   // update average_review 
 
-  update_average_review(){
+  update_average_review() {
 
   }
 
@@ -197,10 +199,10 @@ export class ProductService {
     try {
       // Retrieve the product using the findOne method
       const product = await this.findOne(_id);
-  
+
       // Increment the total_purchase attribute
       product.total_purchase += 1;
-  
+
       // Update the product in the database
       return await this.dataMapper.put(product);
     } catch (error) {
@@ -208,7 +210,7 @@ export class ProductService {
       throw error;
     }
   }
-  
-  
+
+
 }
 

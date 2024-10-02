@@ -35,7 +35,7 @@ export class Product {
   price: number;
 
   @attribute()
-  thumbnail_url: string;
+  thumbnail_url: string [];
 
   @attribute()
   file_url: string;

@@ -4,48 +4,43 @@ import { UpdateCreatorDto } from './dto/update-creator.dto';
 import { Creator } from 'src/schema/creators.schema';
 import { dataMapper } from '../config/data-mapper.config';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
+import { v4 as uuidv4 } from 'uuid';
 const http = require('http')
 
 
 
 @Injectable()
 export class CreatorService {
-  private readonly dataMapper: DataMapper ;
-  constructor() {
-    this.dataMapper = dataMapper
-  }
+  constructor(
+  ) { }
 
-  async create(createCreatorDto: CreateCreatorDto) {
+  private readonly dataMapper: DataMapper = dataMapper;
+
+
+  async create(createCreatorDto: CreateCreatorDto,file) {
 
     
+    // const avatar_url = await this.uploadService.uploadProductImages(file);
 
-
-    const { user_id, title, description, website, avatar, social_link, expertise, average_rating, follower, total_sales, earnings, bank_account } = createCreatorDto;
+    const { user_id, title, description, website, avatar, social_link, expertise, bank_account } = createCreatorDto;
     const creator = Object.assign(new Creator(), {
-      _id: user_id,
+      _id:  uuidv4(),
       user_id: user_id,
       title: title,
       description: description,
       website: website,
-      avatar: avatar,
+      avatar:"asdfkaskdfka",
       social_link: social_link,
       expertise: expertise,
-      average_rating: average_rating,
-      follower: follower,
-      total_sales: total_sales,
-      earnings: earnings,
+      average_rating: 0,
+      follower: 0,
+      total_sales: 0,
+      earnings:0,
       bank_account: bank_account
 
     })
 
     // check if the user with given user_id exist the proceed
-
-    try {
-      
-    } 
-    catch (error) {
-      
-    }
 
     try {
       const result = await this . dataMapper.put(creator);
@@ -62,7 +57,7 @@ export class CreatorService {
     try {
       const creators: Creator[] = [];
       const iterator = this.dataMapper.scan(Creator);
-
+      
       for await (const creator of iterator) {
         creators.push(creator);
       }
