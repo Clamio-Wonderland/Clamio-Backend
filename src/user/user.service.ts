@@ -49,9 +49,9 @@ export class UserService {
   //   return `This action returns a #${id} user`;
   // }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return 
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} user`;

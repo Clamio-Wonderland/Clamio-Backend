@@ -53,7 +53,7 @@ export class UploadService {
 
     async uploadProduct(file: Express.Multer.File): Promise<string> {
         const fileName = `${this.uuidService.generate()}${extname(file.originalname)}`;
-        console.log(fileName);
+
         try {
             await this.s3Client.send(new PutObjectCommand({
                 Bucket: 'clamio-product-image',

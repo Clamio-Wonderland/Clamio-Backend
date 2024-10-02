@@ -1,23 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, Req } from '@nestjs/common';
 import { CreatorService } from './creator.service';
 import { CreateCreatorDto } from './dto/create-creator.dto';
 import { UpdateCreatorDto } from './dto/update-creator.dto';
 import { Multer } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UseInterceptors } from '@nestjs/common';
+import { UserService } from 'src/user/user.service';
 
 @Controller('creator')
 export class CreatorController {
-  constructor(private readonly creatorService: CreatorService) { }
+  constructor(
+    private readonly creatorService: CreatorService,
+  
+  ) { }
 
   @Post()
-  @UseInterceptors(FileInterceptor('avatar')) // Intercepting the uploaded file
+  @UseInterceptors(FileInterceptor('avatar'))
   create(
-    @Body() createCreatorDto: CreateCreatorDto,
-    @UploadedFile() file: Express.Multer.File // Handling the uploaded file
+    @Body() createCreatorDto: CreateCreatorDto,@Req() req,
+    @UploadedFile() file: Express.Multer.File // Correct file handling
   ) {
-    console.log(createCreatorDto);
-    return this.creatorService.create(createCreatorDto, file);
+    const userCookie = req.cookies['user'];
+    const user = userCookie ? JSON.parse(userCookie) : null;
+    console.log(user)
+    return this.creatorService.create(createCreatorDto, file,user._id);
   }
 
 

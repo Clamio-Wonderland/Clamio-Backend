@@ -19,6 +19,7 @@ export class ProductService {
   private readonly dataMapper: DataMapper = dataMapper;
 
   async create(createProductDto: CreateProductDto, files): Promise<Product> {
+    console.log(createProductDto);
 
     console.log(createProductDto);
     console.log(files);
@@ -32,8 +33,8 @@ export class ProductService {
     } = createProductDto;
     const slug = `${title}-${uuidv4()}`;
     
-    const thumbnail_url = await this.uploadService.uploadProductImages(files.images);
-    // const file_url = await this.uploadService.uploadProductImages(files.product);
+    // const thumbnail_url = await this.uploadService.uploadProductImages(files.images);
+    const file_url = await this.uploadService.uploadProductImages(files.product);
 
 
     const product = Object.assign(new Product(), {
@@ -45,8 +46,8 @@ export class ProductService {
       updatedon: new Date(),
       category,
       price,
-      thumbnail_url,
-      file_url:'askdfadkasd',
+      thumbnail_url:'asjfkajksd.com',
+      file_url,
       content_type,
       creator_id,
       active: true,

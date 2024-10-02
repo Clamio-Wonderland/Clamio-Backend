@@ -5,6 +5,9 @@ import { Creator } from 'src/schema/creators.schema';
 import { dataMapper } from '../config/data-mapper.config';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { v4 as uuidv4 } from 'uuid';
+import { UploadService } from 'src/upload/upload.service';
+import { UserService } from 'src/user/user.service';
+
 const http = require('http')
 
 
@@ -12,44 +15,65 @@ const http = require('http')
 @Injectable()
 export class CreatorService {
   constructor(
+    private readonly uploadService: UploadService,
+    private readonly userService : UserService
   ) { }
-
   private readonly dataMapper: DataMapper = dataMapper;
 
 
-  async create(createCreatorDto: CreateCreatorDto,file) {
 
-    
-    // const avatar_url = await this.uploadService.uploadProductImages(file);
+  async create(createCreatorDto: CreateCreatorDto, file, user_id) {
 
-    const { user_id, title, description, website, avatar, social_link, expertise, bank_account } = createCreatorDto;
-    const creator = Object.assign(new Creator(), {
-      _id:  uuidv4(),
-      user_id: user_id,
-      title: title,
-      description: description,
-      website: website,
-      avatar:"asdfkaskdfka",
-      social_link: social_link,
-      expertise: expertise,
-      average_rating: 0,
-      follower: 0,
-      total_sales: 0,
-      earnings:0,
-      bank_account: bank_account
+    const iterator =await this.dataMapper.scan(Creator, {
+      filter: {
+        type: 'Equals',
+        subject: 'user_id',
+        object: user_id,
+      },
+    });
 
-    })
-
-    // check if the user with given user_id exist the proceed
-
-    try {
-      const result = await this . dataMapper.put(creator);
-      return result;
-    } catch (error) {
-      console.log(error);
-      throw error;
-
+    if (iterator) {
+      return "creator for this user is allready exist";
     }
+    else {
+      const avatar_url = await this.uploadService.uploadProduct(file);
+      const { title, description, website, social_link, expertise, bank_account } = createCreatorDto;
+
+      const creator = Object.assign(new Creator(), {
+        _id: uuidv4(),
+        user_id: user_id,
+        title: title,
+        description: description,
+        website: website,
+        avatar: avatar_url,
+        social_link: social_link,
+        expertise: expertise,
+        average_rating: 0,
+        follower: 0,
+        total_sales: 0,
+        earnings: 0,
+        bank_account: bank_account
+
+      });
+
+      try{
+        const result = await this.userService.update(user_id,{creator:true});
+      }
+      catch (error){
+        throw error;
+      }
+
+      try {
+
+        const result = await this.dataMapper.put(creator);
+        return result;
+      } catch (error) {
+        console.log(error);
+        throw error;
+
+      }
+    }
+
 
   }
 
@@ -57,13 +81,13 @@ export class CreatorService {
     try {
       const creators: Creator[] = [];
       const iterator = this.dataMapper.scan(Creator);
-      
+
       for await (const creator of iterator) {
         creators.push(creator);
       }
 
       return creators;
-    } 
+    }
     catch (error) {
       throw error;
     }
@@ -88,10 +112,10 @@ export class CreatorService {
 
     let existedCreator = await this.dataMapper.get(Object.assign(new Creator, { _id: id }));
 
-    const { title, description, website, avatar, social_link, expertise,  bank_account } = updateCreatorDto;
+    const { title, description, website, avatar, social_link, expertise, bank_account } = updateCreatorDto;
 
     const creator = Object.assign(new Creator(), {
-      _id : existedCreator._id,
+      _id: existedCreator._id,
       title: title !== undefined ? title : existedCreator.title,
       description: description !== undefined ? description : existedCreator.description,
       website: website !== undefined ? website : existedCreator.website,
