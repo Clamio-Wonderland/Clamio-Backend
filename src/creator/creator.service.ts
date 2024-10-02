@@ -21,9 +21,9 @@ export class CreatorService {
 
 
 
-  async create(createCreatorDto: CreateCreatorDto, file) {
+  async create(createCreatorDto: CreateCreatorDto, file,user_id) {
     
-    const { user_id,title, description, website, social_link, expertise, bank_account } = createCreatorDto;
+    const {title, description, website, social_link, expertise, bank_account } = createCreatorDto;
  
     const iterator = this.dataMapper.scan(Creator, {
       filter: {

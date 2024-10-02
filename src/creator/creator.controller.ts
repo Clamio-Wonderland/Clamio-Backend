@@ -20,10 +20,10 @@ export class CreatorController {
     @Body() createCreatorDto: CreateCreatorDto,@Req() req,
     @UploadedFile() file: Express.Multer.File // Correct file handling
   ) {
-    // const userCookie = req.cookies['user'];
+    const userCookie = req.cookies['user'];
     
-    // const user = userCookie ? JSON.parse(userCookie) : null;
-    return this.creatorService.create(createCreatorDto, file);
+    const user = userCookie ? JSON.parse(userCookie) : null;
+    return this.creatorService.create(createCreatorDto, file,user);
   }
 
 
