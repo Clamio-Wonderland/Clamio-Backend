@@ -47,7 +47,8 @@ export class UserService {
 
   async findOne(id: string): Promise<user | undefined> {
     try {
-      const product = await this.dataMapper.get(Object.assign(new user(), {_id: id}));
+      const userById = await this.dataMapper.get(Object.assign(new user(), {_id: id}));
+      return userById;
     } catch (error) {
       if (error.name === 'ItemNotFoundException'){
         return undefined;
