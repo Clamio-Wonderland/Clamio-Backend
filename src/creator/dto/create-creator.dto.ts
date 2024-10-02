@@ -1,6 +1,10 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateCreatorDto {
+
+    @IsNotEmpty()
+    @IsString()
+    user_id: string;
     
     @IsNotEmpty()
     @IsString()

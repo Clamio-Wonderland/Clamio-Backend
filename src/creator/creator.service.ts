@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { UploadService } from 'src/upload/upload.service';
 import { UserService } from 'src/user/user.service';
 
-const http = require('http')
 
 
 
@@ -22,22 +21,30 @@ export class CreatorService {
 
 
 
-  async create(createCreatorDto: CreateCreatorDto, file, user_id) {
-
-    const iterator =await this.dataMapper.scan(Creator, {
+  async create(createCreatorDto: CreateCreatorDto, file) {
+    
+    const { user_id,title, description, website, social_link, expertise, bank_account } = createCreatorDto;
+ 
+    const iterator = this.dataMapper.scan(Creator, {
       filter: {
         type: 'Equals',
         subject: 'user_id',
         object: user_id,
       },
     });
+    
+    var creator = null;
+    for await (const record of iterator) {
+      creator = record
+    }
+    
 
-    if (iterator) {
+    if (creator) {
       return "creator for this user is allready exist";
     }
     else {
       const avatar_url = await this.uploadService.uploadProduct(file);
-      const { title, description, website, social_link, expertise, bank_account } = createCreatorDto;
+      
 
       const creator = Object.assign(new Creator(), {
         _id: uuidv4(),

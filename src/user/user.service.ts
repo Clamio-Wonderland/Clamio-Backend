@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { user } from 'src/schema/user-schema';
+import { User } from './entities/user.entity';
 // import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
@@ -58,9 +59,28 @@ export class UserService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return 
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+     
+      let user = await this.dataMapper.get(Object.assign(new User(), { _id: id }));
+  
+      
+      user = Object.assign(user, updateUserDto);
+  
+     
+      return this.dataMapper.put(user);
+    } 
+    catch (error) {
+      
+      if (error.name === 'ItemNotFoundException') {
+        return undefined;
+      }
+  
+      throw error;
+    }
   }
+  
+  
 
   // remove(id: number) {
   //   return `This action removes a #${id} user`;
