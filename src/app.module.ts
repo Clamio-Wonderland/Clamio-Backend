@@ -24,6 +24,7 @@ import { CartModule } from './cart/cart.module';
 import { DemoModule } from './demo/demo.module';
 import { ServicesModule } from './services/services.module';
 import { BookServiceModule } from './book-service/book-service.module';
+import { MakePaymentModule } from './make-payment/make-payment.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { BookServiceModule } from './book-service/book-service.module';
     DemoModule,
     ServicesModule,
     BookServiceModule,
+    MakePaymentModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],

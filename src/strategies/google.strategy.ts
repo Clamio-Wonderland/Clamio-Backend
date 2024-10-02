@@ -66,10 +66,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         createdAt: new Date(), // Add this if you want to set createdAt
       };
 
-      const user = await this.findOneByEmail(userData.email);
-      if (!user) {
-        const userEntity = Object.assign(new User(), userData);
-      }
+      const user = userData;
+      console.log(user);
+      // const user = await this.findOneByEmail(userData.email);
+      // if (!user) {
+      //   const userEntity = Object.assign(new User(), userData);
+      // }
 
       done(null, user);
     } catch (error) {
