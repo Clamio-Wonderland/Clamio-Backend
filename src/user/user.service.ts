@@ -32,7 +32,7 @@ export class UserService {
         users.push(u);
       }
       console.log(users);
-      // return users;
+      return users;
     } catch (error) {
       console.error('Error retrieving all users:', error);
       return [];
