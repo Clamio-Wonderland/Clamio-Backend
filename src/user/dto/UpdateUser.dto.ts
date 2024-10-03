@@ -1,7 +1,7 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
 
-export class CreateOrderDto {
-  @IsString()
+export class UpdateUserDto {
+  @IsNotEmpty()
   creator: boolean;
 
 }

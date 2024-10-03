@@ -48,10 +48,10 @@ export class UserService {
 
   async findOne(id: string): Promise<user | undefined> {
     try {
-      const userById = await this.dataMapper.get(Object.assign(new user(), {_id: id}));
+      const userById = await this.dataMapper.get(Object.assign(new user(), { _id: id }));
       return userById;
     } catch (error) {
-      if (error.name === 'ItemNotFoundException'){
+      if (error.name === 'ItemNotFoundException') {
         return undefined;
       }
       console.error('Error getting product by ID: ', error);
@@ -61,28 +61,25 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-     
-      let user = await this.dataMapper.get(Object.assign(new User(), { _id: id }));
-  
-      
-      user = Object.assign(user, updateUserDto);
-  
-     
-      return this.dataMapper.put(user);
-    } 
-    catch (error) {
-      
+      let userById = await this.dataMapper.get(Object.assign(new user(), { _id: id }));
+
+      userById = Object.assign(userById,updateUserDto);
+      const result = await this.dataMapper.put(userById);
+      return result;
+    } catch (error) {
       if (error.name === 'ItemNotFoundException') {
         return undefined;
       }
-  
+      console.error('Error getting product by ID: ', error);
       throw error;
     }
   }
-  
-  
+
+}
+
+
 
   // remove(id: number) {
   //   return `This action removes a #${id} user`;
   // }
-}
+

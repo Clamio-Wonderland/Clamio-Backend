@@ -11,19 +11,30 @@ import { UserService } from 'src/user/user.service';
 export class CreatorController {
   constructor(
     private readonly creatorService: CreatorService,
-  
+
   ) { }
 
   @Post()
   @UseInterceptors(FileInterceptor('avatar'))
   create(
-    @Body() createCreatorDto: CreateCreatorDto,@Req() req,
+    @Body() createCreatorDto: CreateCreatorDto, @Req() req,
     @UploadedFile() file: Express.Multer.File // Correct file handling
   ) {
     const userCookie = req.cookies['user'];
+    console.log(userCookie)
+
+    // Manually extract the _id value from the cookie string
+    let userId: string | null = null;
+    if (userCookie) {
+      // Use regex to extract the value of _id between the curly braces
+      const match = userCookie.match(/_id:([a-zA-Z0-9-]+)/);
+      if (match && match[1]) {
+        userId = match[1];
+      }
+    }
     
-    const user = userCookie ? JSON.parse(userCookie) : null;
-    return this.creatorService.create(createCreatorDto, file,user);
+    return this.creatorService.create(createCreatorDto, file, userId);
+    return "hello";
   }
 
 

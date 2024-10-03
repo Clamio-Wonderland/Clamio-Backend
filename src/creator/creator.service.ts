@@ -15,16 +15,16 @@ import { UserService } from 'src/user/user.service';
 export class CreatorService {
   constructor(
     private readonly uploadService: UploadService,
-    private readonly userService : UserService
+    private readonly userService: UserService
   ) { }
   private readonly dataMapper: DataMapper = dataMapper;
 
 
 
-  async create(createCreatorDto: CreateCreatorDto, file,user_id) {
-    
-    const {title, description, website, social_link, expertise, bank_account } = createCreatorDto;
- 
+  async create(createCreatorDto: CreateCreatorDto, file, user_id) {
+
+    const { title, description, website, social_link, expertise, bank_account } = createCreatorDto;
+
     const iterator = this.dataMapper.scan(Creator, {
       filter: {
         type: 'Equals',
@@ -32,19 +32,20 @@ export class CreatorService {
         object: user_id,
       },
     });
-    
+
     var creator = null;
     for await (const record of iterator) {
       creator = record
     }
-    
+  
+
 
     if (creator) {
       return "creator for this user is allready exist";
     }
     else {
       const avatar_url = await this.uploadService.uploadProduct(file);
-      
+
 
       const creator = Object.assign(new Creator(), {
         _id: uuidv4(),
@@ -63,10 +64,10 @@ export class CreatorService {
 
       });
 
-      try{
-        const result = await this.userService.update(user_id,{creator:true});
+      try {
+        const result = await this.userService.update(user_id, { creator: true });
       }
-      catch (error){
+      catch (error) {
         throw error;
       }
 
