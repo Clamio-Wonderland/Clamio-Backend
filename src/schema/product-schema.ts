@@ -38,7 +38,7 @@ export class Product {
   thumbnail_url: string;
 
   @attribute()
-  file_url: string;
+  file_url: string [];
 
   @attribute()
   content_type: string;

@@ -16,12 +16,12 @@ import { ProductCategory } from 'src/schema/product-schema';
     @IsEnum(ProductCategory)
     category: string; // 'travel_guide', 'esports_guide', 'food_recipe', 'tarot_reading', 'diet_plan', 'digital_art'
   
-    @IsDecimal()
+    // @IsNumber()
     @IsNotEmpty()
     price: string; // price of the product as a decimal string
     
     
-  
+    @IsNotEmpty()
     @IsString()
     content_type?: string; // optional field to specify product type, such as .mp3, .pdf, etc.
   
@@ -29,8 +29,6 @@ import { ProductCategory } from 'src/schema/product-schema';
     @IsNotEmpty()
     creator_id: string; // foreign key which connects the product to its creator
   
-    // @IsBoolean()
-    @IsNotEmpty()
-    active: boolean;
+
   }
   

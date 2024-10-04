@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { user } from 'src/schema/user-schema';
+import { User } from './entities/user.entity';
 // import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class UserService {
         users.push(u);
       }
       console.log(users);
-      // return users;
+      return users;
     } catch (error) {
       console.error('Error retrieving all users:', error);
       return [];
@@ -45,15 +46,40 @@ export class UserService {
   //   return `This action returns all user`;
   // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
+  async findOne(id: string): Promise<user | undefined> {
+    try {
+      const userById = await this.dataMapper.get(Object.assign(new user(), { _id: id }));
+      return userById;
+    } catch (error) {
+      if (error.name === 'ItemNotFoundException') {
+        return undefined;
+      }
+      console.error('Error getting product by ID: ', error);
+      throw error;
+    }
+  }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      let userById = await this.dataMapper.get(Object.assign(new user(), { _id: id }));
+
+      userById = Object.assign(userById,updateUserDto);
+      const result = await this.dataMapper.put(userById);
+      return result;
+    } catch (error) {
+      if (error.name === 'ItemNotFoundException') {
+        return undefined;
+      }
+      console.error('Error getting product by ID: ', error);
+      throw error;
+    }
+  }
+
+}
+
+
 
   // remove(id: number) {
   //   return `This action removes a #${id} user`;
   // }
-}
+

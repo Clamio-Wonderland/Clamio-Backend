@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { UploadService } from 'src/upload/upload.service';
 import { UuidModule } from 'nestjs-uuid';
+import { MultiUploaderService } from 'src/multi-uploader/multi-uploader.service';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { UuidModule } from 'nestjs-uuid';
   controllers: [ProductController],
   providers: [
     ProductService,
-    UploadService
+    UploadService,
+    MultiUploaderService
   ],
 })
 export class ProductModule {}

@@ -19,22 +19,27 @@ export class ProductController {
     return this.productService.findAll();
   }
 
-  
+
   @Post()
   // @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileFieldsInterceptor([
-    { name: 'images', maxCount: 4 },
-    { name: 'product', maxCount: 1 }
-  ]))
-
+  @UseInterceptors(
+    FileFieldsInterceptor([
+        { name: 'productFile', maxCount: 1 }, // Product file
+        { name: 'productImg', maxCount: 4 },  // Product images
+    ]),
+  )
   async create(
-
     @Body() createProductDto: CreateProductDto,
-    @UploadedFiles() files : {productImages?: Express.Multer.File[], Product?:Express.Multer.File[]}
+    @UploadedFiles()
+            files: { 
+                productFile?: Express.Multer.File[]; 
+                productImg?: Express.Multer.File[] 
+            },
   ) {
-      return this.productService.create(createProductDto,files)
+    console.log('Files:', files);  // Debug the received files
+    return this.productService.create(createProductDto, files);
   }
-
+  
 
 
   @Get(':id')
@@ -57,17 +62,17 @@ export class ProductController {
   @Get('filter/topSellingProduct')
   // @UseGuards(JwtAuthGuard)
   findTopSellingProducts() {
-    
+
     return this.productService.findTopSellingProducts();
   }
 
- @Get('filter/hotAndNewProduct')
+  @Get('filter/hotAndNewProduct')
   // @Get('/hotAndNewProduct')
   // @UseGuards(JwtAuthGuard)
   findHotAndNewProducts() {
-   
-    
+
+
     return this.productService.findHotAndNewProducts();
   }
-  
+
 }

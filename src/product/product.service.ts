@@ -7,19 +7,24 @@ import { Product } from 'src/schema/product-schema';
 import { UploadService } from 'src/upload/upload.service';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ObjectLockEnabled } from '@aws-sdk/client-s3';
+import { MultiUploaderService } from 'src/multi-uploader/multi-uploader.service';
 
 
 @Injectable()
 export class ProductService {
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private readonly multiUploaderService: MultiUploaderService
   ) { }
 
   private readonly dataMapper: DataMapper = dataMapper;
 
-  async create(createProductDto: CreateProductDto, files): Promise<Product> {
+  async create(createProductDto: CreateProductDto, files) {
+    console.log(createProductDto);
 
+    console.log(createProductDto);
+    // console.log(files);
     const {
       title,
       description,
@@ -27,19 +32,25 @@ export class ProductService {
       price,
       content_type,
       creator_id,
-      active
     } = createProductDto;
     const slug = `${title}-${uuidv4()}`;
 
-    const thumbnail_url = await this.uploadService.uploadProductImages(files.images);
-    const file_url = await this.uploadService.uploadProduct(files.product[0]);
+    const productFile = files.productFile?.[0]; 
+    const productImages = files.productImg || []; 
+
+    if (!productFile) {
+        throw new Error('Product file not uploaded');
+    }
+    
+    const thumbnail_url = await this.multiUploaderService.singleFileUploader(productFile.originalname,productFile.buffer,);
+    const file_url = await this.multiUploaderService.multipleFileUploader(productImages);
 
 
     const product = Object.assign(new Product(), {
       _id: uuidv4(),
       title,
       description,
-      slug,  
+      slug,
       createdon: new Date(),
       updatedon: new Date(),
       category,
@@ -48,10 +59,13 @@ export class ProductService {
       file_url,
       content_type,
       creator_id,
-      active,
+      active: true,
       total_purchase: 0
     });
-    
+
+    console.log(product)
+
+    // return "hello";
     try {
       const savedProduct = await this.dataMapper.put(product);
       return savedProduct;
@@ -152,12 +166,12 @@ export class ProductService {
       const date = new Date();
       date.setDate(date.getDate() - 3);
 
-      
+
       const iterator = this.dataMapper.scan(Product);
       const products: Product[] = [];
 
       for await (const product of iterator) {
-        if(product.createdon >= date){
+        if (product.createdon >= date) {
           products.push(product)
         }
       }
@@ -183,10 +197,10 @@ export class ProductService {
   }
 
 
-  
+
   // update average_review 
 
-  update_average_review(){
+  update_average_review() {
 
   }
 
@@ -197,10 +211,10 @@ export class ProductService {
     try {
       // Retrieve the product using the findOne method
       const product = await this.findOne(_id);
-  
+
       // Increment the total_purchase attribute
       product.total_purchase += 1;
-  
+
       // Update the product in the database
       return await this.dataMapper.put(product);
     } catch (error) {
@@ -208,7 +222,7 @@ export class ProductService {
       throw error;
     }
   }
-  
-  
+
+
 }
 
