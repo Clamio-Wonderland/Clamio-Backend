@@ -22,13 +22,19 @@ export class ProductController {
 
   @Post()
   // @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileFieldsInterceptor([
-    { name: 'images', maxCount: 4 },  // 'images' allows up to 4 files
-    { name: 'product', maxCount: 1 }  // 'products' allows only 1 file
-  ]))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+        { name: 'productFile', maxCount: 1 }, // Product file
+        { name: 'productImg', maxCount: 4 },  // Product images
+    ]),
+  )
   async create(
     @Body() createProductDto: CreateProductDto,
-    @UploadedFiles() files : {product : Express.Multer.File[] , images : Express.Multer.File[]}
+    @UploadedFiles()
+            files: { 
+                productFile?: Express.Multer.File[]; 
+                productImg?: Express.Multer.File[] 
+            },
   ) {
     console.log('Files:', files);  // Debug the received files
     return this.productService.create(createProductDto, files);

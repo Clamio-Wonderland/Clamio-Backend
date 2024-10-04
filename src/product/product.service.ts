@@ -7,22 +7,24 @@ import { Product } from 'src/schema/product-schema';
 import { UploadService } from 'src/upload/upload.service';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ObjectLockEnabled } from '@aws-sdk/client-s3';
+import { MultiUploaderService } from 'src/multi-uploader/multi-uploader.service';
 
 
 @Injectable()
 export class ProductService {
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private readonly multiUploaderService: MultiUploaderService
   ) { }
 
   private readonly dataMapper: DataMapper = dataMapper;
 
-  async create(createProductDto: CreateProductDto, files): Promise<Product> {
+  async create(createProductDto: CreateProductDto, files) {
     console.log(createProductDto);
 
     console.log(createProductDto);
-    console.log(files);
+    // console.log(files);
     const {
       title,
       description,
@@ -32,9 +34,16 @@ export class ProductService {
       creator_id,
     } = createProductDto;
     const slug = `${title}-${uuidv4()}`;
+
+    const productFile = files.productFile?.[0]; 
+    const productImages = files.productImg || []; 
+
+    if (!productFile) {
+        throw new Error('Product file not uploaded');
+    }
     
-    // const thumbnail_url = await this.uploadService.uploadProductImages(files.images);
-    const file_url = await this.uploadService.uploadProductImages(files.product);
+    const thumbnail_url = await this.multiUploaderService.singleFileUploader(productFile.originalname,productFile.buffer,);
+    const file_url = await this.multiUploaderService.multipleFileUploader(productImages);
 
 
     const product = Object.assign(new Product(), {
@@ -46,7 +55,7 @@ export class ProductService {
       updatedon: new Date(),
       category,
       price,
-      thumbnail_url:'asjfkajksd.com',
+      thumbnail_url,
       file_url,
       content_type,
       creator_id,
@@ -54,7 +63,9 @@ export class ProductService {
       total_purchase: 0
     });
 
+    console.log(product)
 
+    // return "hello";
     try {
       const savedProduct = await this.dataMapper.put(product);
       return savedProduct;
