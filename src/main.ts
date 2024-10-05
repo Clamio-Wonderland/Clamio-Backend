@@ -25,12 +25,12 @@ async function bootstrap() {
         callback(new Error('Not allowed by CORS')); // Block the request
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allowed methods
     credentials: true, // Allow credentials
   });
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'default-secret', // Use env variable for secret
+      secret: process.env.SESSION_SECRET || 'mysecretpassword', // Use env variable for secret
       resave: false,
       saveUninitialized: false,
       cookie: { secure: true, sameSite: 'strict' },
