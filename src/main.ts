@@ -12,7 +12,22 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1/');
-  app.enableCors();
+  app.enableCors({
+    origin: (origin, callback) => {
+      const allowedOrigins = ['http://localhost:3000', 'https://clamio-next.vercel.app/'];
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      // Check if the origin is allowed
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow the request
+      } else {
+        callback(new Error('Not allowed by CORS')); // Block the request
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+    credentials: true, // Allow credentials
+  });
   app.use(
     session({
       secret: process.env.SESSION_SECRET || 'default-secret', // Use env variable for secret
