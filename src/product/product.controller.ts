@@ -5,6 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ParseFilePipe, FileTypeValidator } from '@nestjs/common';
+import { GetProductByCreatorId } from './dto/getProductByCreatorId.dto';
 
 
 
@@ -73,6 +74,15 @@ export class ProductController {
 
 
     return this.productService.findHotAndNewProducts();
+  }
+
+  @Post('/getProductByCreatorId')
+
+  getProduct(@Body() getProductByCreatorId:GetProductByCreatorId){
+    console.log(getProductByCreatorId);
+
+    return this.productService.getProductByCreatorId(getProductByCreatorId);
+
   }
 
 }

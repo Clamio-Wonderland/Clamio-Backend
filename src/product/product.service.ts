@@ -8,6 +8,7 @@ import { UploadService } from 'src/upload/upload.service';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ObjectLockEnabled } from '@aws-sdk/client-s3';
 import { MultiUploaderService } from 'src/multi-uploader/multi-uploader.service';
+import { GetProductByCreatorId } from './dto/getProductByCreatorId.dto';
 
 
 @Injectable()
@@ -21,10 +22,6 @@ export class ProductService {
   private readonly dataMapper: DataMapper = dataMapper;
 
   async create(createProductDto: CreateProductDto, files) {
-    console.log(createProductDto);
-
-    console.log(createProductDto);
-    // console.log(files);
     const {
       title,
       description,
@@ -35,14 +32,14 @@ export class ProductService {
     } = createProductDto;
     const slug = `${title}-${uuidv4()}`;
 
-    const productFile = files.productFile?.[0]; 
-    const productImages = files.productImg || []; 
+    const productFile = files.productFile?.[0];
+    const productImages = files.productImg || [];
 
     if (!productFile) {
-        throw new Error('Product file not uploaded');
+      throw new Error('Product file not uploaded');
     }
-    
-    const thumbnail_url = await this.multiUploaderService.singleFileUploader(productFile.originalname,productFile.buffer,);
+
+    const thumbnail_url = await this.multiUploaderService.singleFileUploader(productFile.originalname, productFile.buffer,);
     const file_url = await this.multiUploaderService.multipleFileUploader(productImages);
 
 
@@ -223,6 +220,29 @@ export class ProductService {
     }
   }
 
+  async getProductByCreatorId(getProductByCreatorId:GetProductByCreatorId):Promise< Product[]> {
+    const {creator_id} = getProductByCreatorId;
+    console.log(creator_id)
+    const iterator = this.dataMapper.scan(Product, {
+      filter: {
+        type: 'Equals',
+        subject: 'creator_id',
+        object: creator_id,
+      },
+    });
+
+
+
+    const products: Product[] = [];
+
+    for await (const product of iterator) {
+
+      products.push(product)
+
+    }
+    return products;
+
+  }
 
 }
 
