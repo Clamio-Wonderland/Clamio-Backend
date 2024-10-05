@@ -16,9 +16,6 @@ export class Service {
   @attribute() // Enum array representing service categories
   category: string[];
 
-  @attribute() // URL of the product
-  product_url: string;
-
   @attribute() // Title of the service
   title: string;
 
@@ -36,9 +33,6 @@ export class Service {
 
   @attribute() // Array of product highlights
   product_highlights: string[];
-
-  @attribute() // Date the service was created
-  created_date: Date;
 
   @attribute() // Timestamp of creation
   created_on: Date;

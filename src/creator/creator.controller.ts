@@ -6,6 +6,7 @@ import { Multer } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UseInterceptors } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
+import { user } from 'src/schema/user-schema';
 
 @Controller('creator')
 export class CreatorController {
@@ -20,21 +21,15 @@ export class CreatorController {
     @Body() createCreatorDto: CreateCreatorDto, @Req() req,
     @UploadedFile() file: Express.Multer.File // Correct file handling
   ) {
-    const userCookie = req.cookies['user'];
-    console.log(userCookie)
-
-    // Manually extract the _id value from the cookie string
-    let userId: string | null = null;
-    if (userCookie) {
-      // Use regex to extract the value of _id between the curly braces
-      const match = userCookie.match(/_id:([a-zA-Z0-9-]+)/);
-      if (match && match[1]) {
-        userId = match[1];
-      }
-    }
+    let userCookie = req.cookies['user'];
+    console.log(userCookie);
     
-    return this.creatorService.create(createCreatorDto, file, userId);
-    return "hello";
+    // console.log(JSON.parse(userCookie))
+    
+    
+    
+    return this.creatorService.create(createCreatorDto, file, userCookie.id);
+
   }
 
 

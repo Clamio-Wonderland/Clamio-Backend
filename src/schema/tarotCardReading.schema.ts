@@ -12,8 +12,7 @@ export class TarotCardReading {
   @attribute() // ID of the creator
   creator_id: string;
 
-  @attribute() // URL of the tarot card reading product
-  product_url: string;
+  
 
   @attribute() // Title of the tarot card reading service
   title: string;
@@ -49,6 +48,7 @@ export class TarotCardReading {
     birth_time: string; // Time of birth
     description: string; // Description provided by the user
   };
+
 
   @attribute() // Custom questions with a limit of 10
   custom_questions: {
