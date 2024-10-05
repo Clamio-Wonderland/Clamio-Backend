@@ -44,6 +44,7 @@ export class CreatorService {
       return "creator for this user is allready exist";
     }
     else {
+      console.log(file);
       const avatar_url = await this.uploadService.uploadProduct(file);
 
 
