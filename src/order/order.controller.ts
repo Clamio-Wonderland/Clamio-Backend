@@ -13,35 +13,44 @@ import { OrderService } from './order.service';
 import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 import { Order } from '../schema/order.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
+import products from 'razorpay/dist/types/products';
 
 @Controller('order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) { }
 
   // user places an order
   // check if product exists
 
-  @Post('/create')
+  @Post()
   @UseGuards(JwtAuthGuard)
   async createOrder(
     @Body() createOrderDto: CreateOrderDto,
-    @Req() res: Request,
-  ): Promise<any> {
-    const Response = this.orderService.createOrder(createOrderDto, res);
+    @Req() req,
+  ) {
+    let userCookie = req.cookies['user'];
+    userCookie = JSON.parse(userCookie); 
+
+    const Response = this.orderService.createOrder(createOrderDto, req, userCookie.id);
     return Response;
   }
 
   // get all the orders made by an user
   @Get('/getAllOrders')
   @UseGuards(JwtAuthGuard)
-  async getUserOrders(@Req() res: Request): Promise<Order[]> {
-    return this.orderService.getUserOrders(res);
+  async getUserOrders(@Req() req): Promise<Order[]> {
+    let userCookie = req.cookies['user'];
+    userCookie = JSON.parse(userCookie); 
+    return this.orderService.getUserOrders(userCookie.id);
   }
 
   // get order status
-  @Get('/getOrderStatus/:orderId')
-  async getOrderStatus(@Param('orderId') orderId: string): Promise<string> {
-    const status = await this.orderService.getOrderStatus(orderId);
+  @Get('/getOrderStatus/:productId')
+  @UseGuards(JwtAuthGuard)
+  async getOrderStatus(@Param('productId') product_id: string, @Req() req): Promise<string> {
+    let userCookie = req.cookies['user'];
+    userCookie = JSON.parse(userCookie); 
+    const status = await this.orderService.getOrderStatus(product_id, userCookie.id);
     return status;
   }
 

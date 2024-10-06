@@ -1,29 +1,17 @@
 import { Status } from 'src/schema/order.schema';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
 
 export class CreateOrderDto {
-  @IsString()
-  user_id: string;
-
-  // this attribute should goe into item aaray
+  @IsNotEmpty()
   @IsString()
   product_id: string;
 
-  @IsNumber()
+  @IsNotEmpty()
+  // @IsNumber()
   quantity: number;
-
-  @IsNumber()
-  price: number;
-
-  @IsString()
-  thumbnai_url: string;
-
-  //thill here 
-
   
-  @IsNumber()
-  amount: number;
+  @IsNotEmpty()
+  @IsString()
+  invoice_id:string;
 
-  @IsNumber()
-  status: Status;
 }

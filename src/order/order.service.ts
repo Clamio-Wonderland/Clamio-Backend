@@ -5,74 +5,153 @@ import { Order, Status, Item } from 'src/schema/order.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { user as User } from 'src/schema/user-schema';
+import { ProductService } from 'src/product/product.service';
+import { use } from 'passport';
+import { Cart } from 'src/schema/cart.schema';
+import { error } from 'console';
+import items from 'razorpay/dist/types/items';
 @Injectable()
 export class OrderService {
   private readonly dataMapper: DataMapper;
 
-  constructor() {
+  constructor(
+    private readonly productService: ProductService,
+  ) {
     this.dataMapper = dataMapper;
   }
-  async createOrder(orderData: CreateOrderDto, res: Request): Promise<any> {
-    const { user_id, product_id, quantity, price, thumbnai_url, amount, status } = orderData;
-    // const user_id = await this.getUser(res);
 
-    const item = new Item(product_id, quantity, price, new Date(), thumbnai_url);
+  async createOrder(orderData: CreateOrderDto, res: Request, user_id: string): Promise<any> {
+    const { product_id, quantity, invoice_id } = orderData;
 
-    const order = new Order();
-    order._id = uuidv4();
-    order.user_id = user_id;
-    order.items.push(item);
-    order.purchase_date = new Date();
-    order.amount = amount;
-    order.status = Status.PENDING;
-    await this.dataMapper.put(order);
-    return {
-      message: 'order successfully created',
-      order,
-    };
+    try {
+      // Fetch product details
+      const productDetails = await this.productService.findOne(product_id);
+
+      const item = new Item(
+        product_id,
+        quantity,
+        invoice_id,
+        productDetails.price,
+        new Date(),
+        productDetails.thumbnail_url,
+        Status.PENDING,
+        productDetails.creator_id,
+        productDetails.creator_name,
+        new Date()
+      );
+
+      // Check if an order already exists for the user
+      const iterator = this.dataMapper.scan(Order, {
+        filter: {
+          type: 'Equals',
+          subject: 'user_id',
+          object: user_id
+        }
+      });
+
+      let existingOrder = null;
+      for await (const order of iterator) {
+        existingOrder = order;
+        break;
+      }
+
+      if (existingOrder) {
+
+        existingOrder.items.push(item);
+        return await this.dataMapper.put(existingOrder);
+      }
+
+      else {
+
+        const newOrder = new Order();
+        newOrder._id = uuidv4();
+        newOrder.user_id = user_id;
+        newOrder.items = [item];
+        return await this.dataMapper.put(newOrder);
+      }
+    }
+    catch (error) {
+      // Proper error throwing
+      throw error;
+    }
   }
 
-  async getOrderStatus(orderId: string): Promise<Status> {
-    const iterator = this.dataMapper.scan(Order, {
-      filter: {
-        type: 'Equals',
-        subject: '_id',
-        object: orderId,
-      },
-    });
-    ``;
 
-    const orders: Order[] = [];
-    for await (const order of iterator) {
-      orders.push(order);
+  async getOrderStatus(product_id: string, user_id: string): Promise<Status | string> {
+    try {
+
+      const iterator = this.dataMapper.scan(Order, {
+        filter: {
+          type: 'Equals',
+          subject: 'user_id',
+          object: user_id,
+        },
+      });
+
+      let userOrder = null;
+
+
+      for await (const order of iterator) {
+        userOrder = order;
+        break;
+      }
+
+
+      if (!userOrder) {
+        return "No order found for this user.";
+      }
+
+
+      for (let i = 0; i < userOrder.items.length; i++) {
+        if (userOrder.items[i].product_id === product_id) {
+          return userOrder.items[i].status;
+        }
+      }
+
+
+      return "Product not found in the user's order.";
+
     }
+    catch (error) {
+      if (error.name === 'ItemNotFoundException') {
+        return "User has no valid orders.";
+      }
 
-    if (orders.length > 0) {
-      return orders[0].status;
-    } else {
-      throw new NotFoundException('Order not found with this id');
+
+      throw error;
     }
   }
 
-  async getUserOrders(req: Request): Promise<Order[]> {
-    const userId = await this.getUser(req);
-    const orders: Order[] = [];
 
-    // Use the scan method to find orders by user_id
-    const iterator = this.dataMapper.scan(Order, {
-      filter: {
-        type: 'Equals',
-        subject: 'user_id',
-        object: userId,
-      },
-    });
 
-    for await (const order of iterator) {
-      orders.push(order);
+  async getUserOrders(user_id: string): Promise<Order[]> {
+    try {
+      
+      const iterator = this.dataMapper.scan(Order, {
+        filter: {
+          type: 'Equals',
+          subject: 'user_id',
+          object: user_id,
+        },
+      });
+  
+      let userOrder = null;
+      for await (const order of iterator) {
+        userOrder = order;
+        break;
+      }
+  
+      if (!userOrder) {
+        return [];
+      }
+  
+      return userOrder.items;
+      
+    } catch (error) {
+      throw error;
     }
-
-    return orders;
   }
+  
 
   private async findOneById(id: string): Promise<User | null> {
     const iterator = this.dataMapper.query(User, { _id: id }, { limit: 1 });
@@ -129,10 +208,10 @@ export class OrderService {
   }
 
   async remove(id: number) {
-    try{
-      return await this.dataMapper.delete(Object.assign(new Order,{_id:id}));
+    try {
+      return await this.dataMapper.delete(Object.assign(new Order, { _id: id }));
     }
-    catch(error){
+    catch (error) {
       throw error;
     }
   }

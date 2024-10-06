@@ -18,6 +18,9 @@ export class Item {
     quantity: number;
 
     @attribute()
+    invoice_id:string
+
+    @attribute()
     price: number;
 
     @attribute()
@@ -26,14 +29,33 @@ export class Item {
     @attribute()
     thumbnail_url: string;
 
-    constructor(product_id,quantity,price,added_at,thumbnail_url){
+    @attribute()
+    status:string
+
+    @attribute()
+    creator_id
+
+    @attribute()
+    creator_name
+
+    @attribute()
+    purchase_date
+
+    constructor(product_id,quantity,invoice_id,price,added_at,thumbnail_url,status,creator_id,creator_name,purchase_date){
         this.product_id = product_id;
         this.quantity=quantity;
+        this.invoice_id = invoice_id;
         this.price = price;
         this.added_at=added_at;
         this.thumbnail_url = thumbnail_url;
+        this.status=status;
+        this.creator_id=creator_id;
+        this.creator_name=creator_name;
+        this.purchase_date=purchase_date;
     }
 }
+
+
 
 
 @table('order')
@@ -44,14 +66,15 @@ export class Order {
     @attribute()
     user_id: string;
 
+    @attribute()
     items:Item[]
     
-    @attribute()
-    purchase_date : Date;
+    // @attribute()
+    // purchase_date : Date;
 
-    @attribute()
-    amount: number;
+    // @attribute()
+    // amount: number;
 
-    @attribute()
-    status: Status;
+    // @attribute()
+    // status: Status;
 }
