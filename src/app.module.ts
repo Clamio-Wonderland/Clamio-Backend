@@ -26,6 +26,7 @@ import { ServicesModule } from './services/services.module';
 import { BookServiceModule } from './book-service/book-service.module';
 import { MakePaymentModule } from './make-payment/make-payment.module';
 import { MultiUploaderModule } from './multi-uploader/multi-uploader.module';
+import { DownloadableModule } from './downloadable/downloadable.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { MultiUploaderModule } from './multi-uploader/multi-uploader.module';
     BookServiceModule,
     MakePaymentModule,
     MultiUploaderModule,
+    DownloadableModule,
   ],
   controllers: [],
   providers: [GoogleStrategy],
