@@ -77,7 +77,7 @@ export class ProductController {
   }
 
   @Post('/getProductByCreatorId')
-
+  
   getProduct(@Body() getProductByCreatorId:GetProductByCreatorId){
     console.log(getProductByCreatorId);
 

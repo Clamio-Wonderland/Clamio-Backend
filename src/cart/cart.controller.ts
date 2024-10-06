@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards,Req, BadRequestException } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
+import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
+import { error } from 'console';
+import { prototype } from 'events';
 
 @Controller('cart')
 export class CartController {
@@ -9,12 +12,19 @@ export class CartController {
 
   //  add to cart single or multiple product product should
   @Post()
-  create(@Body() createCartDto: CreateCartDto) {
-    return this.cartService.create(createCartDto);
+  @UseGuards(JwtAuthGuard)
+  create(@Body() createCartDto: CreateCartDto ,@Req() req) {
+    let userCookie = req.cookies['user'];
+    if(!userCookie){
+      throw new BadRequestException('cookies is not set');
+    }
+    userCookie =  JSON.parse(userCookie);
+    return this.cartService.create(createCartDto,userCookie.id);
   }
 
   // get all products in the cart
   @Get()
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.cartService.findAll();
   }
@@ -29,19 +39,41 @@ export class CartController {
   // updateAll(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
   //   return this.cartService.update(+id, updateCartDto);
   // }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartService.update(+id, updateCartDto);
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param('id') id: string) {
+    return this.cartService.findOne(id);
   }
+
+  // @Patch(':id')
+  // @UseGuards(JwtAuthGuard)
+  // update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
+  //   return this.cartService.update(id, updateCartDto);
+  // }
 
   @Delete()
-  removeAll(@Param('id') id: string) {
-    return this.cartService.removeAll(+id);
+  @UseGuards(JwtAuthGuard)
+  removeAll(@Req() req) {
+    let userCookie = req.cookies['user'];
+    if(!userCookie){
+      throw new BadRequestException('cookies is not set');
+    }
+    userCookie =  JSON.parse(userCookie);
+    return this.cartService.removeAll(userCookie.id);
   }
 
+  
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  remove(@Param('id') product_id:string,@Req()req){
+    let userCookie = req.cookies['user'];
+    if(!userCookie){
+      throw new BadRequestException('cookies is not set');
+    }
+    userCookie =  JSON.parse(userCookie);
+    return this.cartService.remove(product_id,userCookie.id);
   }
+  
+
 }

@@ -9,6 +9,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ObjectLockEnabled } from '@aws-sdk/client-s3';
 import { MultiUploaderService } from 'src/multi-uploader/multi-uploader.service';
 import { GetProductByCreatorId } from './dto/getProductByCreatorId.dto';
+import { Creator } from 'src/schema/creators.schema';
 
 
 @Injectable()
@@ -22,6 +23,7 @@ export class ProductService {
   private readonly dataMapper: DataMapper = dataMapper;
 
   async create(createProductDto: CreateProductDto, files) {
+    console.log(createProductDto);
     const {
       title,
       description,
@@ -29,6 +31,7 @@ export class ProductService {
       price,
       content_type,
       creator_id,
+      creator_name
     } = createProductDto;
     const slug = `${title}-${uuidv4()}`;
 
@@ -57,19 +60,16 @@ export class ProductService {
       content_type,
       creator_id,
       active: true,
-      total_purchase: 0
+      total_purchase: 0,
+      creator_name
     });
 
-    console.log(product)
-
-    // return "hello";
     try {
       const savedProduct = await this.dataMapper.put(product);
       return savedProduct;
     }
 
     catch (error) {
-      console.error('Error creating product:', error);
       throw new Error('Could not create product');
     }
   }

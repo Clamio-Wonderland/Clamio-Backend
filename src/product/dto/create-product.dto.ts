@@ -28,7 +28,10 @@ import { ProductCategory } from 'src/schema/product-schema';
     @IsString()
     @IsNotEmpty()
     creator_id: string; // foreign key which connects the product to its creator
-  
+    
+    @IsString()
+    @IsNotEmpty()
+    creator_name: string;
 
   }
   
