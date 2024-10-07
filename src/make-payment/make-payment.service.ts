@@ -47,8 +47,8 @@ export class MakePaymentService {
     };
 
     const Instance = new Razorpay({
-      key_id: process.env.RAZORPAY_ID || 'rzp_test_JiEJrykMcKRloz',
-      key_secret: process.env.RAZORYPAY_SECRET || 'QtYdgd2cuIyXfwI2UJCsc87i',
+      key_id: process.env.RAZORPAY_ID!,
+      key_secret: process.env.RAZORYPAY_SECRET!,
     });
 
     const returnMessage = {
