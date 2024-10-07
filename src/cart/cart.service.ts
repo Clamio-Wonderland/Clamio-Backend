@@ -57,7 +57,7 @@ export class CartService {
                 product_id,
                 productDetails.price,
                 new Date(),
-                productDetails.thumbnail_url,
+                productDetails.product_url,
                 productDetails.creator_id,
                 productDetails.creator_name
             );
@@ -77,7 +77,7 @@ export class CartService {
                     product_id,
                     productDetails.price,
                     new Date(),
-                    productDetails.thumbnail_url,
+                    productDetails.product_url,
                     productDetails.creator_id,
                     productDetails.creator_name
                 )

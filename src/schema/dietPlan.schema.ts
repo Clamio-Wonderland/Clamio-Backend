@@ -35,7 +35,7 @@ export class DietPlan {
   thumbnail_url: string;
 
   @attribute() // URL of the diet plan file
-  file_url: string;
+  images_url: string;
 
   @attribute() // Type of content file (e.g., PDF, DOC)
   content_file_type: string;

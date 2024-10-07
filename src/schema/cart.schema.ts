@@ -16,7 +16,7 @@ export class Product {
     added_at: Date;
 
     @attribute()
-    thumbnail_url: string;
+    product_url: string;
 
     @attribute()
     creator_id: string;
@@ -28,7 +28,7 @@ export class Product {
         product_id: string,
         price: number,
         added_at: Date,
-        thumbnail_url: string,
+        product_url: string,
         creator_id: string,
         creator_name: string
     ) {
@@ -36,7 +36,7 @@ export class Product {
         this.quantity = 1;
         this.price = price;
         this.added_at = added_at;
-        this.thumbnail_url = thumbnail_url;
+        this.product_url = product_url;
         this.creator_id = creator_id;
         this.creator_name = creator_name;
     }

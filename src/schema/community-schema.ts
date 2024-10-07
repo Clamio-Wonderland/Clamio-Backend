@@ -15,5 +15,5 @@ export class Community {
   description: string;
 
   @attribute()
-  thumbnail_url: string;
+  product_url: string;
 }

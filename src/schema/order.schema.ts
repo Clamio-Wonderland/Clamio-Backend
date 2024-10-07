@@ -24,14 +24,14 @@ export class Item {
     added_at: Date;
 
     @attribute()
-    thumbnail_url: string;
+    product_url: string;
 
-    constructor(product_id,quantity,price,added_at,thumbnail_url){
+    constructor(product_id,quantity,price,added_at,product_url){
         this.product_id = product_id;
         this.quantity=quantity;
         this.price = price;
         this.added_at=added_at;
-        this.thumbnail_url = thumbnail_url;
+        this.product_url = product_url;
     }
 }
 
