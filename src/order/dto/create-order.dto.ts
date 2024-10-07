@@ -8,6 +8,9 @@ export class CreateOrderDto {
   user_id?: string;
 
   @IsString()
+  razorpayId: string;
+
+  @IsString()
   product_id: string;
 
   @IsNumber()
