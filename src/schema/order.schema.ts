@@ -53,6 +53,7 @@ export class Order {
   @attribute()
   user_id: string;
 
+  @attribute()
   items: Item[];
 
   @attribute()

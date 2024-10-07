@@ -8,9 +8,9 @@ import {
 } from 'class-validator';
 
 export class CreateOrderDto {
-  @IsString()
-  @IsOptional()
-  user_id?: string;
+  // @IsString()
+  // @IsOptional()
+  // user_id?: string;
 
   @IsString()
   razorpayId: string;

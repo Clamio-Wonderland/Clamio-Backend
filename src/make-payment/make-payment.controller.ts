@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { MakePaymentService } from './make-payment.service';
@@ -15,6 +16,7 @@ import { CreateMakePaymentDto } from './dto/create-make-payment.dto';
 import { UpdateMakePaymentDto } from './dto/update-make-payment.dto';
 import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 import { OrderService } from 'src/order/order.service';
+import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
 
 @Controller('payment')
 export class MakePaymentController {
@@ -29,6 +31,7 @@ export class MakePaymentController {
   }
 
   @Post('confirm-payment')
+  @UseGuards(JwtAuthGuard)
   async confirmPayment(
     @Body() confirm: CreateOrderDto,
     @Req() req,

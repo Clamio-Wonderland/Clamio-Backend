@@ -17,21 +17,23 @@ export class OrderService {
     this.dataMapper = dataMapper;
   }
 
-  async createOrder(orderData: CreateOrderDto, res: Request): Promise<any> {
+  async createOrder(orderData: CreateOrderDto, req: any): Promise<any> {
     const {
-      user_id,
       product_id, // Changed from product_id to product_ids
       quantity,
       itemPrice: price,
       thumbnai_url,
       amountPaid: amount,
-      status,
     } = orderData;
 
+    const currTime = new Date();
+
     const items: Item[] = product_id.map(
-      (product_id) =>
-        new Item(product_id, quantity, price, new Date(), thumbnai_url),
+      (id) => new Item(id, quantity, price, new Date(), thumbnai_url), // Make sure thumbnail_url is spelled correctly
     );
+
+    //@ts-ignore
+    const user_id: any = req?.user.sub;
 
     try {
       const products: any = await this.findMultiple(product_id); // New method to find multiple products
@@ -49,7 +51,6 @@ export class OrderService {
       order.purchase_date = new Date();
       order.amount = amount;
       order.status = Status.SUCCESSFUL;
-
       await this.dataMapper.put(order);
       return {
         message: 'Order successfully created',
@@ -119,7 +120,9 @@ export class OrderService {
   }
 
   async getUserOrders(req: Request): Promise<Order[]> {
-    const userId = await this.getUser(req);
+    //@ts-ignore
+    const userId = req.user.sub;
+
     const orders: Order[] = [];
 
     // Use the scan method to find orders by user_id
