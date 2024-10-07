@@ -13,23 +13,46 @@ export class OrderService {
     this.dataMapper = dataMapper;
   }
   async createOrder(orderData: CreateOrderDto, res: Request): Promise<any> {
-    const { user_id, product_id, quantity, price, thumbnai_url, amount, status } = orderData;
+    const {
+      user_id,
+      product_id,
+      quantity,
+      itemPrice: price,
+      thumbnai_url,
+      amountPaid: amount,
+      status,
+    } = orderData;
     // const user_id = await this.getUser(res);
 
-    const item = new Item(product_id, quantity, price, new Date(), thumbnai_url);
+    const item = new Item(
+      product_id,
+      quantity,
+      price,
+      new Date(),
+      thumbnai_url,
+    );
 
-    const order = new Order();
-    order._id = uuidv4();
-    order.user_id = user_id;
-    order.items.push(item);
-    order.purchase_date = new Date();
-    order.amount = amount;
-    order.status = Status.PENDING;
-    await this.dataMapper.put(order);
-    return {
-      message: 'order successfully created',
-      order,
-    };
+    try {
+      const order = new Order();
+      order.items = [];
+      order._id = uuidv4();
+      order.user_id = user_id;
+      order.items.push(item);
+      order.purchase_date = new Date();
+      order.amount = amount;
+      order.status = Status.SUCCESSFUL;
+
+      await this.dataMapper.put(order);
+      return {
+        message: 'order successfully created',
+        order,
+      };
+    } catch (error) {
+      return {
+        message: 'Error Creating order',
+        error: error.message,
+      };
+    }
   }
 
   async getOrderStatus(orderId: string): Promise<Status> {
@@ -104,35 +127,34 @@ export class OrderService {
         orders.push(order);
       }
     } catch (error) {
-
       throw new Error('Error retrieving orders');
     }
 
     return orders;
   }
 
-
   async update(id: number, updatedOrder: Partial<Order>) {
     try {
-      let order = await this.dataMapper.get(Object.assign(new Order, { _id: id }));
+      let order = await this.dataMapper.get(
+        Object.assign(new Order(), { _id: id }),
+      );
 
       if (!order) {
         return undefined;
       }
       order = Object.assign(order, updatedOrder);
       return this.dataMapper.put(order);
-    }
-    catch (error) {
+    } catch (error) {
       throw error;
     }
-
   }
 
   async remove(id: number) {
-    try{
-      return await this.dataMapper.delete(Object.assign(new Order,{_id:id}));
-    }
-    catch(error){
+    try {
+      return await this.dataMapper.delete(
+        Object.assign(new Order(), { _id: id }),
+      );
+    } catch (error) {
       throw error;
     }
   }

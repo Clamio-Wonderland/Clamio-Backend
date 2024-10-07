@@ -1,11 +1,12 @@
 import { Status } from 'src/schema/order.schema';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { Optional } from '@nestjs/common';
 
 export class CreateOrderDto {
   @IsString()
-  user_id: string;
+  @IsOptional()
+  user_id?: string;
 
-  // this attribute should goe into item aaray
   @IsString()
   product_id: string;
 
@@ -13,17 +14,17 @@ export class CreateOrderDto {
   quantity: number;
 
   @IsNumber()
-  price: number;
+  itemPrice: number;
 
   @IsString()
-  thumbnai_url: string;
+  @IsOptional()
+  thumbnai_url?: string;
 
-  //thill here 
-
-  
-  @IsNumber()
-  amount: number;
+  //thill here
 
   @IsNumber()
+  amountPaid: number;
+
+  @IsString()
   status: Status;
 }

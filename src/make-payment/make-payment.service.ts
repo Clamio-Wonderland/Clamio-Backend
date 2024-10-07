@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CreateMakePaymentDto } from './dto/create-make-payment.dto';
 import { Response } from 'express';
 import { dataMapper } from 'src/config/data-mapper.config';
@@ -6,16 +6,22 @@ const Razorpay = require('razorpay');
 import { user as User } from '../schema/user-schema';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
+import { OrderService } from 'src/order/order.service';
 @Injectable()
 export class MakePaymentService {
   private readonly dataMapper: DataMapper;
 
-  constructor(private readonly jwtService: JwtService) {
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly orderService: OrderService,
+  ) {
     this.dataMapper = dataMapper;
   }
 
   async create(createMakePaymentDto: CreateMakePaymentDto, res: Response) {
     const { serviceName, email } = createMakePaymentDto;
+    // jwt middlewar abhi nahi hain
 
     // try {
     //   const existingUser = await this.findOneByEmail(email);
