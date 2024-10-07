@@ -35,10 +35,10 @@ export class Product {
   price: number;
 
   @attribute()
-  thumbnail_url: string;
+  product_url: string;
 
   @attribute()
-  file_url: string [];
+  images_url: string [];
 
   @attribute()
   content_type: string;
