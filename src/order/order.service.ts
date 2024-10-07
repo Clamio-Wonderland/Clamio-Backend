@@ -7,61 +7,80 @@ import { dataMapper } from 'src/config/data-mapper.config';
 import { user as User } from 'src/schema/user-schema';
 import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/schema/product-schema';
+
 @Injectable()
 export class OrderService {
   private readonly dataMapper: DataMapper;
   private readonly productService: ProductService;
+
   constructor() {
     this.dataMapper = dataMapper;
   }
+
   async createOrder(orderData: CreateOrderDto, res: Request): Promise<any> {
     const {
       user_id,
-      product_id,
+      product_id, // Changed from product_id to product_ids
       quantity,
       itemPrice: price,
       thumbnai_url,
       amountPaid: amount,
       status,
     } = orderData;
-    // const user_id = await this.getUser(res);
 
-    const item = new Item(
-      product_id,
-      quantity,
-      price,
-      new Date(),
-      thumbnai_url,
+    const items: Item[] = product_id.map(
+      (product_id) =>
+        new Item(product_id, quantity, price, new Date(), thumbnai_url),
     );
 
     try {
-      const product: any = await this.findOne(product_id);
-      if (product.error) {
+      const products: any = await this.findMultiple(product_id); // New method to find multiple products
+      if (products.error) {
         return {
-          message: 'Product not found',
-          error: 'Incorrect product Id',
+          message: 'Some products not found',
+          error: products.error,
         };
       }
+
       const order = new Order();
-      order.items = [];
+      order.items = items;
       order._id = uuidv4();
       order.user_id = user_id;
-      order.items.push(item);
       order.purchase_date = new Date();
       order.amount = amount;
       order.status = Status.SUCCESSFUL;
 
       await this.dataMapper.put(order);
       return {
-        message: 'order successfully created',
+        message: 'Order successfully created',
         order,
       };
     } catch (error) {
       return {
-        message: 'Error Creating order',
+        message: 'Error creating order',
         error: error.message,
       };
     }
+  }
+
+  private async findMultiple(ids: string[]) {
+    const products = [];
+    for (const id of ids) {
+      try {
+        const product: any = await this.findOne(id);
+        if (product.error) {
+          return {
+            error: `Product not found for ID: ${id}`,
+          };
+        }
+        products.push(product);
+      } catch (error) {
+        return {
+          error: `Error retrieving product with ID: ${id}`,
+        };
+      }
+    }
+    return products;
   }
 
   private async findOne(id: string) {
@@ -86,7 +105,6 @@ export class OrderService {
         object: orderId,
       },
     });
-    ``;
 
     const orders: Order[] = [];
     for await (const order of iterator) {
@@ -141,6 +159,7 @@ export class OrderService {
 
     return user._id;
   }
+
   async findAll(): Promise<Order[]> {
     const orders: Order[] = [];
     const iterator = await this.dataMapper.scan(Order);

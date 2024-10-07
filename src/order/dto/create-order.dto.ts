@@ -1,6 +1,11 @@
 import { Status } from 'src/schema/order.schema';
-import { IsString, IsNumber, IsOptional } from 'class-validator';
-import { Optional } from '@nestjs/common';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ArrayNotEmpty,
+} from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
@@ -10,8 +15,9 @@ export class CreateOrderDto {
   @IsString()
   razorpayId: string;
 
-  @IsString()
-  product_id: string;
+  @IsArray() // Validate that product_id is an array
+  @ArrayNotEmpty() // Ensure that the array is not empty
+  product_id: string[]; // Changed to an array of strings
 
   @IsNumber()
   quantity: number;
@@ -22,8 +28,6 @@ export class CreateOrderDto {
   @IsString()
   @IsOptional()
   thumbnai_url?: string;
-
-  //thill here
 
   @IsNumber()
   amountPaid: number;
