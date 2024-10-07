@@ -42,8 +42,8 @@ export class ProductService {
       throw new Error('Product file not uploaded');
     }
 
-    const thumbnail_url = await this.multiUploaderService.singleFileUploader(productFile.originalname, productFile.buffer,);
-    const file_url = await this.multiUploaderService.multipleFileUploader(productImages);
+    const product_url = await this.multiUploaderService.singleFileUploader(productFile.originalname, productFile.buffer,);
+    const images_url = await this.multiUploaderService.multipleFileUploader(productImages);
 
 
     const product = Object.assign(new Product(), {
@@ -55,8 +55,8 @@ export class ProductService {
       updatedon: new Date(),
       category,
       price,
-      thumbnail_url,
-      file_url,
+      product_url,
+      images_url,
       content_type,
       creator_id,
       active: true,

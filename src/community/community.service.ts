@@ -17,7 +17,7 @@ export class CommunityService {
   private readonly dataMapper: DataMapper = dataMapper;
 
   async create(createCommunityDto: CreateCommunityDto): Promise<Community> {
-    const { name, creator_id, description, thumbnail_url } = createCommunityDto;
+    const { name, creator_id, description, product_url } = createCommunityDto;
     const slug = `${name}-${uuidv4()}`;
 
     const community = Object.assign(new Community(), {
@@ -25,7 +25,7 @@ export class CommunityService {
       creator_id: creator_id,
       name: name,
       description: description,
-      thumbnail_url: thumbnail_url,
+      product_url: product_url,
       slug: slug
     });
 
@@ -79,7 +79,7 @@ export class CommunityService {
 
 
   async update(id: string, updateCommunityDto: UpdateCommunityDto): Promise<Community | null> {
-    const { name, creator_id, description, thumbnail_url } = updateCommunityDto;
+    const { name, creator_id, description, product_url } = updateCommunityDto;
 
     try {
       // retriving existing community
@@ -90,7 +90,7 @@ export class CommunityService {
         _id: id,
         name: name !== undefined ? name : existingCommunity.name,
         description: description !== undefined ? description : existingCommunity.description,
-        thumbnail_url: thumbnail_url !== undefined ? thumbnail_url : existingCommunity.thumbnail_url
+        product_url: product_url !== undefined ? product_url : existingCommunity.product_url
       });
 
       // Save the updated community

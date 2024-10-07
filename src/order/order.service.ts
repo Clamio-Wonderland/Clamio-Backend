@@ -5,10 +5,12 @@ import { Order, Status, Item } from 'src/schema/order.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { dataMapper } from 'src/config/data-mapper.config';
 import { user as User } from 'src/schema/user-schema';
+import { ProductService } from 'src/product/product.service';
+import { Product } from 'src/schema/product-schema';
 @Injectable()
 export class OrderService {
   private readonly dataMapper: DataMapper;
-
+  private readonly productService: ProductService;
   constructor() {
     this.dataMapper = dataMapper;
   }
@@ -33,6 +35,13 @@ export class OrderService {
     );
 
     try {
+      const product: any = await this.findOne(product_id);
+      if (product.error) {
+        return {
+          message: 'Product not found',
+          error: 'Incorrect product Id',
+        };
+      }
       const order = new Order();
       order.items = [];
       order._id = uuidv4();
@@ -51,6 +60,20 @@ export class OrderService {
       return {
         message: 'Error Creating order',
         error: error.message,
+      };
+    }
+  }
+
+  private async findOne(id: string) {
+    try {
+      const product = await this.dataMapper.get(
+        Object.assign(new Product(), { _id: id }),
+      );
+      return product;
+    } catch (error) {
+      return {
+        message: 'Product not found',
+        error: 'Incorrect product Id',
       };
     }
   }
