@@ -44,8 +44,9 @@ export class DownloadableService {
 
   async handleDownload(product_id: string, res, user_id: string, req: Request ) {
     try {
-      const ordersByUser = await this.orderService.getUserOrders(req);
+      // const ordersByUser = await this.orderService.getUserOrders(req);
       const product = await this.dataMapper.get(Object.assign(new Product(), { _id: product_id }));
+      console.log(product);
   
       if (!product) {
         throw new BadRequestException('Product not found');
@@ -55,12 +56,13 @@ export class DownloadableService {
   
       if (isValidOrder) {
         const fileUrl = product.product_url;
+        console.log(fileUrl);
         const fileKey = fileUrl.split('/').pop(); 
   
         const s3 = new S3();
   
         const s3Params = {
-          Bucket: 'clamio-product-image', 
+          Bucket: 'clamio-image', 
           Key: fileKey,  
         };
   
