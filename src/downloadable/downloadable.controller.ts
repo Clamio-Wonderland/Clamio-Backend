@@ -47,13 +47,13 @@ export class DownloadableController {
   ) {
 
    
-    let userCookie = req.cookies['user'];
-    if (!userCookie) {
-      throw new BadRequestException('User not authenticated');
-    }
+    // let userCookie = req.cookies['user'];
+    // if (!userCookie) {
+    //   throw new BadRequestException('User not authenticated');
+    // }
 
     
-    userCookie = JSON.parse(userCookie);
+    // userCookie = JSON.parse(userCookie);
 
 
     return await this.downloadableService.handleDownload(product_id, res, req);
