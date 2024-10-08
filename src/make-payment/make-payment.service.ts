@@ -38,7 +38,7 @@ export class MakePaymentService {
       'NewOrder' + serviceName + Math.floor(Math.random() * 10000);
 
     //db call should be made
-    const paymentAmount = 1000; // payment according to amount saved in the database
+    const paymentAmount = 1000; // payament according to amount saved in the database
 
     let options = {
       amount: paymentAmount,

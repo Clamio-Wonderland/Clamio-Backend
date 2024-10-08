@@ -24,13 +24,23 @@ export class Product {
     @attribute()
     creator_name: string;
 
+    @attribute()
+    images_url: string [];
+
+
+    @attribute()
+    title: string;
+  
+
     constructor(
         product_id: string,
         price: number,
         added_at: Date,
         product_url: string,
         creator_id: string,
-        creator_name: string
+        creator_name: string,
+        images_url: string[],
+        title: string
     ) {
         this.product_id = product_id;
         this.quantity = 1;
@@ -39,6 +49,8 @@ export class Product {
         this.product_url = product_url;
         this.creator_id = creator_id;
         this.creator_name = creator_name;
+        this.images_url = images_url
+        this.title = title
     }
 }
 

@@ -16,33 +16,35 @@ export class OrderService {
   constructor() {
     this.dataMapper = dataMapper;
   }
-
   async createOrder(orderData: CreateOrderDto, req: any): Promise<any> {
     const {
-      product_id, // Changed from product_id to product_ids
+      product_id, // product_ids
       quantity,
-      itemPrice: price,
-      thumbnai_url,
       amountPaid: amount,
     } = orderData;
-
-    const currTime = new Date();
-
-    const items: Item[] = product_id.map(
-      (id) => new Item(id, quantity, price, new Date(), thumbnai_url), // Make sure thumbnail_url is spelled correctly
-    );
 
     //@ts-ignore
     const user_id: any = req?.user.sub;
 
     try {
-      const products: any = await this.findMultiple(product_id); // New method to find multiple products
-      if (products.error) {
+      // Fetch product details using productService
+      const products: Product[] = await this.findMultiple(product_id); // assuming findMultiple returns an array of products
+      
+      if (!products || products.length === 0) {
         return {
           message: 'Some products not found',
-          error: products.error,
         };
       }
+
+      // Map product details to the items
+      const items: Item[] = products.map((product) => new Item(
+        product._id,                   // product_id
+        quantity,                      // quantity from orderData
+        product.price,                 // price from product schema
+        new Date(),                    // added_at
+        product.images_url,            // images_url from product schema
+        product.title                  // title from product schema
+      ));
 
       const order = new Order();
       order.items = items;
@@ -51,7 +53,10 @@ export class OrderService {
       order.purchase_date = new Date();
       order.amount = amount;
       order.status = Status.SUCCESSFUL;
+
+      // Save the order to DynamoDB
       await this.dataMapper.put(order);
+      
       return {
         message: 'Order successfully created',
         order,
@@ -64,39 +69,76 @@ export class OrderService {
     }
   }
 
-  private async findMultiple(ids: string[]) {
-    const products = [];
+  // private async findMultiple(ids: string[]) {
+  //   const products = [];
+  //   for (const id of ids) {
+  //     try {
+  //       const product: any = await this.findOne(id);
+  //       if (product.error) {
+  //         return {
+  //           error: `Product not found for ID: ${id}`,
+  //         };
+  //       }
+  //       products.push(product);
+  //     } catch (error) {
+  //       return {
+  //         error: `Error retrieving product with ID: ${id}`,
+  //       };
+  //     }
+  //   }
+  //   return products;
+  // }
+
+
+  private async findMultiple(ids: string[]): Promise<Product[]> {
+    const products: Product[] = [];
+    
     for (const id of ids) {
       try {
-        const product: any = await this.findOne(id);
-        if (product.error) {
-          return {
-            error: `Product not found for ID: ${id}`,
-          };
+        const product: Product | null = await this.findOne(id);
+  
+        if (!product) {
+          console.warn(`Product not found for ID: ${id}`);
+          continue; // Skip adding the product if it's not found
         }
+  
         products.push(product);
       } catch (error) {
-        return {
-          error: `Error retrieving product with ID: ${id}`,
-        };
+        console.error(`Error retrieving product with ID: ${id}: ${error.message}`);
       }
     }
+    
     return products;
   }
+  
+  
 
-  private async findOne(id: string) {
+  // private async findOne(id: string) {
+  //   try {
+  //     const product = await this.dataMapper.get(
+  //       Object.assign(new Product(), { _id: id }),
+  //     );
+  //     return product;
+  //   } catch (error) {
+  //     return {
+  //       message: 'Product not found',
+  //       error: 'Incorrect product Id',
+  //     };
+  //   }
+  // }
+
+  private async findOne(id: string): Promise<Product | null> {
     try {
       const product = await this.dataMapper.get(
         Object.assign(new Product(), { _id: id }),
       );
       return product;
     } catch (error) {
-      return {
-        message: 'Product not found',
-        error: 'Incorrect product Id',
-      };
+      // Return null if the product is not found
+      return null;
     }
   }
+  
 
   async getOrderStatus(orderId: string): Promise<Status> {
     const iterator = this.dataMapper.scan(Order, {
@@ -122,6 +164,8 @@ export class OrderService {
   async getUserOrders(req: Request): Promise<Order[]> {
     //@ts-ignore
     const userId = req.user.sub;
+
+    console.log("userId in getAllOrders>>>>", userId)
 
     const orders: Order[] = [];
 

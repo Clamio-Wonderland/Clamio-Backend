@@ -28,20 +28,26 @@ export class Item {
   added_at: Date;
 
   @attribute()
-  thumbnail_url: string;
+  images_url: string [];
+
+
+  @attribute()
+  title: string;
 
   constructor(
     product_id: string,
     quantity: number,
     price: number,
     added_at: Date,
-    thumbnail_url: string,
+    images_url: string [],
+    title: string
   ) {
     this.product_id = product_id;
     this.quantity = quantity;
     this.price = price;
     this.added_at = added_at;
-    this.thumbnail_url = thumbnail_url;
+    this.images_url = images_url;
+    this.title = title
   }
 }
 

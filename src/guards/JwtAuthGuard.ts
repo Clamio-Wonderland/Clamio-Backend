@@ -18,12 +18,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     try {
-      const userObject = JSON.parse(cookie);
+      const decodedCookie = decodeURIComponent(cookie);
+      const userObject = JSON.parse(decodedCookie);
       const secret = process.env.JWT_SECRET || 'mySecretJwtPassword';
       const decoded = jwt.verify(userObject.token, secret); // Verify token from cookie
+     
+      console.log("this is my cookie>>>>>>", decoded)
       request.user = decoded; // Attach decoded token to the request
       return true;
     } catch (err) {
+      console.log("error in jwt guard>>>>>>>>>", err)
       throw new UnauthorizedException('Unauthorized access');
     }
   }

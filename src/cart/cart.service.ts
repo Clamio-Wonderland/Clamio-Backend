@@ -59,7 +59,9 @@ export class CartService {
                 new Date(),
                 productDetails.product_url,
                 productDetails.creator_id,
-                productDetails.creator_name
+                productDetails.creator_name,
+                productDetails.images_url,
+                productDetails.title
             );
 
             existingCart.products.push(product);
@@ -79,7 +81,9 @@ export class CartService {
                     new Date(),
                     productDetails.product_url,
                     productDetails.creator_id,
-                    productDetails.creator_name
+                    productDetails.creator_name,
+                    productDetails.images_url,
+                    productDetails.title
                 )
             ];
             newCart.total_amount = productDetails.price;
