@@ -34,7 +34,7 @@ export class DigitalArt {
   thumbnail_url: string;
 
   @attribute() // URL of the digital art file
-  file_url: string;
+  images_url: string;
 
   @attribute() // Type of content file (e.g., PNG, JPG)
   content_file_type: string;

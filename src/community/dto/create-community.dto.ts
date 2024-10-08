@@ -18,5 +18,5 @@ export class CreateCommunityDto {
 
     @IsUrl()
     @IsNotEmpty()
-    thumbnail_url: string; // URL for community preview page
+    product_url: string; // URL for community preview page
 }

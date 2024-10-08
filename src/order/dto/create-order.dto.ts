@@ -1,17 +1,39 @@
 import { Status } from 'src/schema/order.schema';
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ArrayNotEmpty,
+  IsNotEmpty,
+} from 'class-validator';
 
 export class CreateOrderDto {
-  @IsNotEmpty()
-  @IsString()
-  product_id: string;
+  // @IsString()
+  // @IsOptional()
+  // user_id?: string;
 
-  @IsNotEmpty()
-  // @IsNumber()
+  @IsString()
+  razorpayId: string;
+
+  @IsArray() // Validate that product_id is an array
+  @ArrayNotEmpty() // Ensure that the array is not empty
+  product_id: string[]; // Changed to an array of strings
+
+  // @IsNotEmpty()
+  @IsNumber()
   quantity: number;
-  
-  @IsNotEmpty()
-  @IsString()
-  invoice_id:string;
 
+  @IsNumber()
+  itemPrice: number;
+
+  @IsString()
+  @IsOptional()
+  thumbnai_url?: string;
+
+  @IsNumber()
+  amountPaid: number;
+
+  @IsString()
+  status: Status;
 }

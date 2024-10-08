@@ -14,7 +14,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1/');
   app.enableCors({
     origin: (origin, callback) => {
-      const allowedOrigins = ['http://localhost:3000', 'https://clamio-next.vercel.app/'];
+      const allowedOrigins = ['http://localhost:3000', 'https://clamio-next.vercel.app/', 'http://localhost:3001', 'https://www.clamio.in','https://clamio-frontend-nextjs.vercel.app', 'clamio.in' ];
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 

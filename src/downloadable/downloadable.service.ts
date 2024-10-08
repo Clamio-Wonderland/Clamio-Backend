@@ -42,9 +42,9 @@ export class DownloadableService {
     return `This action removes a #${id} downloadable`;
   }
 
-  async handleDownload(product_id: string, res, user_id: string) {
+  async handleDownload(product_id: string, res, user_id: string, req: Request ) {
     try {
-      const ordersByUser = await this.orderService.getUserOrders(user_id);
+      const ordersByUser = await this.orderService.getUserOrders(req);
       const product = await this.dataMapper.get(Object.assign(new Product(), { _id: product_id }));
   
       if (!product) {
@@ -54,7 +54,7 @@ export class DownloadableService {
       let isValidOrder = true;
   
       if (isValidOrder) {
-        const fileUrl = product.file_url[0];
+        const fileUrl = product.product_url;
         const fileKey = fileUrl.split('/').pop(); 
   
         const s3 = new S3();

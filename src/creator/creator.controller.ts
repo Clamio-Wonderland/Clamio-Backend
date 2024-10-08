@@ -41,13 +41,11 @@ export class CreatorController {
 
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.creatorService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.creatorService.findOne(id);
   }

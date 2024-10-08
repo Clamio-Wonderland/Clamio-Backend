@@ -56,7 +56,7 @@ export class DownloadableController {
     userCookie = JSON.parse(userCookie);
 
 
-    return await this.downloadableService.handleDownload(product_id,res,userCookie.id);
+    return await this.downloadableService.handleDownload(product_id, res, userCookie.id, req);
 
   }
 

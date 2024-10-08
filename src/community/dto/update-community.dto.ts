@@ -15,5 +15,5 @@ export class UpdateCommunityDto {
     description?: string; // optional field to describe the community
 
     // @IsUrl()
-    thumbnail_url: string; // URL for community preview page
+    product_url: string; // URL for community preview page
 }

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CreateMakePaymentDto } from './dto/create-make-payment.dto';
 import { Response } from 'express';
 import { dataMapper } from 'src/config/data-mapper.config';
@@ -6,16 +6,22 @@ const Razorpay = require('razorpay');
 import { user as User } from '../schema/user-schema';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/guards/JwtAuthGuard';
+import { OrderService } from 'src/order/order.service';
 @Injectable()
 export class MakePaymentService {
   private readonly dataMapper: DataMapper;
 
-  constructor(private readonly jwtService: JwtService) {
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly orderService: OrderService,
+  ) {
     this.dataMapper = dataMapper;
   }
 
   async create(createMakePaymentDto: CreateMakePaymentDto, res: Response) {
     const { serviceName, email } = createMakePaymentDto;
+    // jwt middlewar abhi nahi hain
 
     // try {
     //   const existingUser = await this.findOneByEmail(email);
@@ -32,7 +38,7 @@ export class MakePaymentService {
       'NewOrder' + serviceName + Math.floor(Math.random() * 10000);
 
     //db call should be made
-    const paymentAmount = 1000; // payment according to amount saved in the database
+    const paymentAmount = 1000; // payament according to amount saved in the database
 
     let options = {
       amount: paymentAmount,
@@ -41,8 +47,8 @@ export class MakePaymentService {
     };
 
     const Instance = new Razorpay({
-      key_id: process.env.RAZORPAY_ID || 'rzp_test_JiEJrykMcKRloz',
-      key_secret: process.env.RAZORYPAY_SECRET || 'QtYdgd2cuIyXfwI2UJCsc87i',
+      key_id: process.env.RAZORPAY_ID!,
+      key_secret: process.env.RAZORYPAY_SECRET!,
     });
 
     const returnMessage = {
