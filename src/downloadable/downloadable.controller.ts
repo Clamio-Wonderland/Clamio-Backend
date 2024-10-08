@@ -40,7 +40,7 @@ export class DownloadableController {
 
   
   @Get('/download/:product_id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async download(
     @Param('product_id') product_id: string,
     @Req() req, @Res()res
@@ -56,7 +56,7 @@ export class DownloadableController {
     userCookie = JSON.parse(userCookie);
 
 
-    return await this.downloadableService.handleDownload(product_id, res,userCookie.id, req);
+    return await this.downloadableService.handleDownload(product_id, res, req);
 
   }
 
