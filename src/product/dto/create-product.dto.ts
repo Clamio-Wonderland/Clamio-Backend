@@ -20,11 +20,6 @@ import { ProductCategory } from 'src/schema/product-schema';
     @IsNotEmpty()
     price: string; // price of the product as a decimal string
     
-    
-    @IsNotEmpty()
-    @IsString()
-    content_type?: string; // optional field to specify product type, such as .mp3, .pdf, etc.
-  
     @IsString()
     @IsNotEmpty()
     creator_id: string; // foreign key which connects the product to its creator

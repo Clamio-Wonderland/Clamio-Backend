@@ -40,7 +40,7 @@ export class DownloadableController {
 
   
   @Get('/download/:product_id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async download(
     @Param('product_id') product_id: string,
     @Req() req, @Res()res

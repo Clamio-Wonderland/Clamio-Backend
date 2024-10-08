@@ -10,6 +10,7 @@ import { ObjectLockEnabled } from '@aws-sdk/client-s3';
 import { MultiUploaderService } from 'src/multi-uploader/multi-uploader.service';
 import { GetProductByCreatorId } from './dto/getProductByCreatorId.dto';
 import { Creator } from 'src/schema/creators.schema';
+import path from 'path';
 
 
 @Injectable()
@@ -29,7 +30,6 @@ export class ProductService {
       description,
       category,
       price,
-      content_type,
       creator_id,
       creator_name
     } = createProductDto;
@@ -41,7 +41,8 @@ export class ProductService {
     if (!productFile) {
       throw new Error('Product file not uploaded');
     }
-
+    
+    const content_type = path.extname(productFile.originalname);
     const product_url = await this.multiUploaderService.singleFileUploader(productFile.originalname, productFile.buffer,);
     const images_url = await this.multiUploaderService.multipleFileUploader(productImages);
 
@@ -72,6 +73,7 @@ export class ProductService {
     catch (error) {
       throw new Error('Could not create product');
     }
+
   }
 
 
