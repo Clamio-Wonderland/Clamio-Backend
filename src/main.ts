@@ -33,7 +33,7 @@ async function bootstrap() {
       secret: process.env.SESSION_SECRET || 'mysecretpassword', // Use env variable for secret
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false, sameSite: 'strict' },
+      cookie: { secure: false, sameSite: 'none' },
     }),
   );
 
