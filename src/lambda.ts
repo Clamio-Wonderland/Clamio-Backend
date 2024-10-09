@@ -22,7 +22,7 @@ async function bootstrap() {
       secret: process.env.SESSION_SECRET || 'default-secret',
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: true, sameSite: 'strict' },
+      cookie: { secure: true, sameSite: 'none' },
     }),
   );
 
