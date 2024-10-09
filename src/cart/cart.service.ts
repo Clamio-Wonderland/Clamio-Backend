@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { DataMapper, ItemNotFoundException } from '@aws/dynamodb-data-mapper';
@@ -185,7 +185,7 @@ export class CartService {
     if (existingCart.products.length < initialProductCount) {
         existingCart.total_amount -= existingCart.products.find(product => product.product_id === product_id)?.price || 0;
     } else {
-        throw new Error("Product not found in the cart.");
+        throw new NotFoundException("Product not found in the cart.");
     }
 
    
