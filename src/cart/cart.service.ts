@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { DataMapper, ItemNotFoundException } from '@aws/dynamodb-data-mapper';
@@ -19,7 +19,7 @@ export class CartService {
   async create(createCartDto: CreateCartDto, user_id: string) {
     const { product_id} = createCartDto;
 
-    try {
+    // try {
        
         const productDetails = await this.productService.findOne(product_id);
         if (!productDetails) {
@@ -49,7 +49,7 @@ export class CartService {
                 (product) => product.product_id === product_id
             );
             if (productInCart) {
-                return "This product is already in the cart";
+                throw new ConflictException('This product is already in the cart')
             }
 
             
@@ -91,9 +91,9 @@ export class CartService {
             const result = await this.dataMapper.put(newCart);
             return result;
         }
-    } catch (error) {
-        throw new Error(`Error creating cart: ${error.message}`);
-    }
+    // } catch (error) {
+    //     throw new Error(`Error creating cart: ${error.message}`);
+    // }
 }
 
 

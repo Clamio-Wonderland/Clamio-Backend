@@ -28,13 +28,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     } catch (err) {
       console.log("error in jwt guard>>>>>>>>>", err)
-      throw new UnauthorizedException('Unauthorized access');
+      throw new UnauthorizedException('Unauthorized. Please Login to continue');
     }
   }
 
   handleRequest(err, user, info) {
     if (err || !user) {
-      throw err || new UnauthorizedException('Unauthorized access');
+      throw err || new UnauthorizedException('Unauthorized. Please Login to continue');
     }
     return user;
   }
