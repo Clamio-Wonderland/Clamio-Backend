@@ -14,7 +14,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1/');
   app.enableCors({
     origin: (origin, callback) => {
-      const allowedOrigins = ['http://localhost:3000', 'https://clamio-next.vercel.app/', 'http://localhost:3001', 'https://www.clamio.in','https://clamio-frontend-nextjs.vercel.app', 'clamio.in' ];
+      const allowedOrigins = ['http://localhost:3000', 'https://clamio-next.vercel.app/', 'http://localhost:3001', 'https://www.clamio.in','https://clamio-frontend-nextjs.vercel.app', 'clamio.in', 'www.clamio.in' ];
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
@@ -27,13 +27,17 @@ async function bootstrap() {
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allowed methods
     credentials: true, // Allow credentials
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   });
   app.use(
     session({
       secret: process.env.SESSION_SECRET || 'mysecretpassword', // Use env variable for secret
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: true, sameSite: 'strict' },
+      cookie: {
+        secure: process.env.NODE_ENV === 'production', // Only use secure in production
+        sameSite: 'none', // Use 'none' to allow cross-site cookies
+      }
     }),
   );
 

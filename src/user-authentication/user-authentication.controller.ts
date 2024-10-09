@@ -57,4 +57,6 @@ export class UserAuthenticationController {
   async getMe(@Req() request: any) {
     return this.userAuthService.getUser(request);
   }
+
+  
 }
